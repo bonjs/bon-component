@@ -190,9 +190,12 @@ var extend = function(){
 			return sup.prototype;
 		});
 		*/
-		// this.superclass 指向父类
+		// this.superclass 指向父类	
 		sub.prototype.superclass = sup.prototype;
 		
+		sub.prototype.callParent = function() {
+			sup.prototype.constructor.call(this);
+		};
 		
 		sub.prototype.override = io;
 		override(sub, overrides);

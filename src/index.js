@@ -6,7 +6,8 @@ var Base = function() {
 
 var User = extend(Base, {
 	constructor: function() {
-		this.superclass.constructor.call(this);
+		//this.superclass.constructor.call(this);
+		this.callParent();
 		alert('init');
 	}
 });
