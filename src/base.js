@@ -185,10 +185,15 @@ var extend = function(){
 			override(sub, o);
 		};
 		
+		/*
 		sub.prototype.superclass = sub.prototype.supr = (function(){
 			return sup.prototype;
 		});
-		sub.prototype.superclass = sup.prototype
+		*/
+		// this.superclass 指向父类
+		sub.prototype.superclass = sup.prototype;
+		
+		
 		sub.prototype.override = io;
 		override(sub, overrides);
 		sub.extend = function(o){
