@@ -1,5 +1,6 @@
 
 
+
 var extend = function(){
 	var io = function(o){
 		for(var m in o){
@@ -30,6 +31,12 @@ var extend = function(){
 			}
 		}
 	}
+	
+	var defineMethod = function (methodName, methodBody) {
+		this.prototype[methodName] = methodBody;
+		methodBody.$name = methodName;
+		methodBody.$owner = this;
+	};
 
 	return function(sub, sup, overrides){
 		if(typeof sup == 'object'){
@@ -44,31 +51,40 @@ var extend = function(){
 		F.prototype = sup.prototype;
 		sub.prototype = new F();
 		sub.prototype.constructor = sub;
-		sub.super = sup.prototype;
+		sub.superclass = sup.prototype;
 		if(sup.prototype.constructor == oc){
 			sup.prototype.constructor = sup;
 		}
-		sub.override = function(o){
-			override(sub, o);
-		};
 		
+		
+		override(sub, overrides);
 		/*
 		sub.prototype.superclass = sub.prototype.supr = (function(){
 			return sup.prototype;
 		});
 		*/
-		// this.super 指向父类	
-		sub.prototype.super = sup.prototype;
+		// this.superclass 指向父类	
+		//sub.prototype.superclass = sup.prototype;
+		
+		for(var k in sub.prototype) {
+			if(typeof sub.prototype[k] == 'function') {
+				defineMethod.call(sub, k, sub.prototype[k]);
+			}
+		}
+		
 		debugger
-		sub.prototype.callSuper = function() {
-			var methodName = arguments.callee.caller.name;
-			console.log('methodName:', methodName);
-			
-			sup.prototype[methodName].call(this);
+		sub.prototype.callParent = function() {
+			var method = arguments.callee.caller;
+			return method.$owner && method.$owner.$baseType.prototype[method.$name] && method.$owner.$baseType.prototype[method.$name].apply(this, arguments);
 		};
 		
-		sub.prototype.override = io;
-		override(sub, overrides);
+		
+		sub.$baseType = sup;
+		
+		
+		
+		
+		
 		sub.extend = function(o){
 			return extend(sub, o);
 		};

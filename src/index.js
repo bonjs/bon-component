@@ -4,26 +4,31 @@ var Base = function() {
 	console.log('Base init');
 };
 
-debugger
+Base.prototype.method = function() {
+	console.log('base method')
+}
+
+
+
 var Observable = extend(Base, {
 	constructor: function() {
-		this.callSuper();
-		console.log('Observable init');
+		console.log('observable init')
+		this.callParent();
 	},
-	name: 'observable'
-	
-});
+	method: function() {
+		this.callParent();
+		console.log('observable method')
+	}
+})
 
 
 var User = extend(Observable, {
-	
-	name: 'User',
 	constructor: function() {
-		debugger
-		this.callSuper();
+		this.callParent()
 		console.log('user init');
 	},
 	method: function() {
+		this.callParent();
 		console.log('user method')
 	}
 });
