@@ -1,15 +1,33 @@
 
 
 var Base = function() {
-	alert('base');
+	console.log('Base init');
 };
 
-var User = extend(Base, {
+debugger
+var Observable = extend(Base, {
 	constructor: function() {
-		//this.superclass.constructor.call(this);
-		this.callParent();
-		alert('init');
+		this.callSuper();
+		console.log('Observable init');
+	},
+	name: 'observable'
+	
+});
+
+
+var User = extend(Observable, {
+	
+	name: 'User',
+	constructor: function() {
+		debugger
+		this.callSuper();
+		console.log('user init');
+	},
+	method: function() {
+		console.log('user method')
 	}
 });
 
 var u = new User();
+
+u.method();
