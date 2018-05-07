@@ -33,7 +33,7 @@ var extend = function(){
 	}
 	
 	var defineMethod = function (methodName, methodBody) {
-		this.prototype[methodName] = methodBody;
+		//this.prototype[methodName] = methodBody;
 		methodBody.$name = methodName;
 		methodBody.$owner = this;
 	};
@@ -57,6 +57,7 @@ var extend = function(){
 		}
 		
 		
+		
 		override(sub, overrides);
 		/*
 		sub.prototype.superclass = sub.prototype.supr = (function(){
@@ -66,28 +67,48 @@ var extend = function(){
 		// this.superclass 指向父类	
 		//sub.prototype.superclass = sup.prototype;
 		
-		for(var k in sub.prototype) {
-			if(typeof sub.prototype[k] == 'function') {
-				defineMethod.call(sub, k, sub.prototype[k]);
-			}
-		}
 		
-		debugger
+		
 		sub.prototype.callParent = function() {
 			var method = arguments.callee.caller;
 			return method.$owner && method.$owner.$baseType.prototype[method.$name] && method.$owner.$baseType.prototype[method.$name].apply(this, arguments);
 		};
+		
+		sub.prototype.super = function() {
+			var method, 
+				superMethod = (method = this.super.caller) &&
+                        ((method = method.$owner ? method : method.caller) &&
+                          method.$owner.superclass);
+						  
+			return superMethod;
+		
+		}
+		sub.prototype.super2 = function() {
+			var method = arguments.callee.caller;
+			console.log('super:' + method.$owner.prototype.name)
+			return method.$owner.$baseType.prototype;
+		};
+		
+		
 		
 		
 		sub.$baseType = sup;
 		
 		
 		
+		for(var k in sub.prototype) {
+			//if(typeof sub.prototype[k] == 'function') {
+				defineMethod.call(sub, k, sub.prototype[k]);
+			//}
+		}
 		
-		
+		/*
 		sub.extend = function(o){
 			return extend(sub, o);
 		};
+		*/
+		
+		
 		return sub;
 	};
 }()
