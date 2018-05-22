@@ -18,14 +18,17 @@
 					  <tr>
 						<td ng-repeat="col in lockedColumnsTitles">
 							{{col.header}}
-							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)">
-							</span>
+							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
+							<input ng-if="col.type == 'checkbox'" type="checkbox" />
 						</td>
 					  </tr>
 					</table>
 					<table class="columns-content" border="0" cellspacing="0" cellpadding="0" id="locked-block">
-					  <tr ng-repeat="row in data">
-						<td ng-repeat="col in lockedColumnsTitles">{{row[col.dataIndex]}}</td>
+					  <tr ng-repeat="(colIndex, row) in data">
+						<td ng-repeat="col in lockedColumnsTitles ">
+							{{col.type == 'data' ? row[col.dataIndex] : ""}}
+							<input ng-if="col.type != 'data'" type="{{col.type}}" ng-checked="col.isChecked" ng-click="checkItem(row, colIndex)"/>
+						</td>
 					  </tr> 
 					</table>
 				</div>
@@ -35,8 +38,7 @@
 					  <tr>
 						<td ng-repeat="col in unlockedColumnsTitles">
 							{{col.header}}
-							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)">
-							</span>
+							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
 						</td>
 					  </tr>
 					</table>
@@ -53,9 +55,30 @@
 		
 		<script>
 		
-			var Table = extend(ComponentAngular, {
+			var Column = extend(Component, {
+			
+				isLocked: false,	// 是否是锁定列
+				type: 'data',	// [data, checkbox, radio]
+				isChecked: true,
+				constructor: function() {
 				
-				constructor: function(a) {
+					this.super(arguments);
+					
+					var me = this;
+					
+					this.renderHTML = '<div>aaa</div>'
+					
+				},
+				
+				
+				
+				
+				
+			});
+		
+			var Table = extend(ComponentAngular, {
+			
+				constructor: function() {
 				
 					this.super(arguments);
 					
@@ -68,7 +91,9 @@
 						
 						me.scope.data = me.data;
 						
-						$scope.sortClick = me.sortClick.bind(me);
+						me.scope.sortClick = me.sortClick.bind(me);
+						
+						me.scope.checkItem = me.checkItem.bind(me);
 						
 						//通过$compile动态编译html
 						var template = angular.element(me.template);
@@ -80,6 +105,24 @@
 				},
 				initTable: function() {
 					var me = this;
+					this.columns = this.columns.reduce(function(arr, it) {
+						var col = new Column({
+							grid: me,
+							type: it.type || 'data',
+							header: it.header,
+							dataIndex: it.dataIndex,
+							locked: it.locked,
+							sortable: it.sortable,
+							scope: me.scope
+						});
+						arr.push(col);
+						return arr;
+					}, []);
+					
+					this.data.forEach(function(it, i) {
+						
+					});
+				
 					this.scope.lockedColumnsTitles = this.columns.filter(function(it) {
 						return it.locked === true;
 					});
@@ -87,6 +130,9 @@
 					this.scope.unlockedColumnsTitles = this.columns.filter(function(it) {
 						return it.locked !== true;
 					});
+				},
+				checkItem: function(col, index) {
+					this.fireEvent('checkitem', col, index);
 				},
 				sortClick: function(col) {
 					col.sort = (col.sort == 'desc' || col.sort == undefined) ? 'asc' : 'desc';
@@ -105,8 +151,8 @@
 								return (b[dataIndex] + '').localeCompare(a[dataIndex])
 							}
 						}
-						
 					});
+					this.fireEvent('titleclick', col)
 				}
 			});
 			
@@ -129,8 +175,20 @@
 					}
 					return arr;
 				}(),
+				listeners: {
+					titleclick: function(a) {
+						console.log('titleclick', a)
+					},
+					checkitem: function(row, i) {
+						console.log(row, i)
+					}
+				},
 				columns: [
 					{
+						type: 'checkbox',
+						dataIndex : 'id',
+						locked: true
+					}, {
 						header : '编号',
 						dataIndex : 'id',
 						sortable: true,
@@ -139,7 +197,6 @@
 						header : '姓名',
 						dataIndex : 'name',
 						sortable: true,
-						locked: true
 					}, {
 						header : '语文',
 						sortable: true,
