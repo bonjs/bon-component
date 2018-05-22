@@ -1,0 +1,57 @@
+.component-table {
+	width:500px; 
+	height:200px;
+	border-bottom: 1px #ccc solid;
+	border-right: 1px #ccc solid;
+}
+.component-table table {
+	border-collapse:collapse;
+	border:0;
+	border:none;
+}
+
+.component-table table td  {
+	border:1px solid #ccc;
+	overflow:hidden;
+	padding:0 2px;
+	
+	min-width: 100px; 
+	max-width: 100px;  
+	width: 100px;
+	
+	text-align: center;
+}
+
+
+
+
+.component-table .unlocked-columns {
+	width:calc(100% - 211px);
+}
+
+.component-table .unlocked-columns, .component-table .locked-columns  {
+	float: left;
+	height: inherit;
+	overflow:hidden;
+	position:relative;
+}
+
+.component-table .columns-content {
+	height: calc(100% - 21px);
+	display: block;
+}
+
+.component-table .unlocked-columns .columns-title {
+	display: block;
+	overflow:hidden
+}
+.component-table .unlocked-columns .columns-content {
+	overflow:overlay; 
+}
+
+.component-table .locked-columns .columns-content {
+	overflow:hidden; 
+}
+.component-table .locked-columns .columns-title, .component-table  .unlocked-columns .columns-title {
+	background:#ddd;
+}

@@ -1,12 +1,201 @@
-<html>
+<html ng-app="app" >
 	<head>
+		
+		<link type="text/css" rel="stylesheet" href=src/css/table.css />
 	
+		<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script> 
 	
-		<script src="dest/index.js"></script>
-	</head>
-	<body>
+		<script src="src/js/Extend.js"></script>
+		<script src="src/js/Observable.js"></script>
+		<script src="src/js/Component.js"></script>
+		<script src="src/js/ComponentAngular.js"></script>
+		
+		<script type="html" id="template">
+			<div class="component-table">
 	
-	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+				<div class="locked-columns">
+					<table class="columns-title" border="0" cellspacing="0" cellpadding="0" >
+					  <tr>
+						<td>序号</td>
+						<td>姓名</td>
+					  </tr>
+					</table>
+					<table class="columns-content" border="0" cellspacing="0" cellpadding="0" id="locked-block">
+					  <tr>
+						<td>001</td>
+						<td>tom</td>
+					  </tr>
+					          
+					</table>
+				</div>
 
-	</body>
+				<div class="unlocked-columns">
+					<table class="columns-title" border="0" cellspacing="0" cellpadding="0" id="tableDiv_title" >
+					  <tr>
+						<td>语文</td>
+						<td>数学</td>
+						<td>英文</td>
+						<td>历史</td>
+						<td>物理</td>
+						<td>生物</td>
+					  </tr>
+					</table>
+					<table class="columns-content" border="0" cellspacing="0" cellpadding="0" 
+						onscroll='divScroll(this);' onmousewheel="divScroll(this);" onwheel="divScroll(this);">
+					  <tr>
+						<td>1</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>
+					   <tr>
+						<td>2</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>
+					  <tr>
+						<td>3</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>
+					  <tr>
+						<td>4</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>
+					   <tr>
+						<td>5</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>
+					   <tr>
+						<td>6</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>     
+					  <tr>
+						<td>7</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>
+					   <tr>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>
+					   <tr>
+						<td>9</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>
+						<tr>
+						<td>10</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+						<td>88</td>
+					  </tr>           
+					</table>
+				</div>
+				<div style="clear:both;"></div>
+				
+			</div>
+		</script>
+		
+		<script>
+		
+			var Table = extend(ComponentAngular, {
+				//html: "<button ng-click='say()'>{{userName}}</button>",
+				html: template.innerHTML,
+				data: [
+					{id: 1, username: 'sun', email: 'sun@163.com'},
+					{id: 2, username: 'sun2', email: 'sun@163.com'},
+					{id: 3, username: 'sun3', email: 'sun@163.com'}
+				],
+				constructor: function() {
+					this.super(arguments);
+					
+					var me = this;
+					
+					var app = angular.module("app", []);
+					app.controller('main', ['$scope', '$compile', function ($scope, $compile) {
+						
+						me.scope = $scope;
+						
+						me.scope.data = me.data;
+						
+						$scope.userName = 'RAY';
+						$scope.say = function() {
+							console.log('你好:' + $scope.userName);
+						};
+						
+						//通过$compile动态编译html
+						var template = angular.element(me.html);
+						var el = $compile(template)($scope);
+						
+						angular.element(document.body).append(el);
+					
+					}]);
+				},
+				method: function() {
+					
+				}
+			});
+			
+			var table = new Table();
+			
+			
+			
+			
+			
+			function divScroll(scrollDiv) {
+				var scrollTop = scrollDiv.scrollTop;
+				var scrollLeft = scrollDiv.scrollLeft;
+				
+				console.log(scrollLeft)
+				
+				document.getElementById("locked-block").scrollTop = scrollTop;
+				document.getElementById("tableDiv_title").scrollLeft = scrollLeft;
+			}
+			
+			function wheel(event) {
+				var evt = event || window.event;
+				var bodyDivY = document.getElementById("tableDiv_y");
+				var scrollDivY = document.getElementById("scrollDiv_y");
+				scrollDivY.scrollTop = scrollDivY.scrollTop + evt.deltaY * 7;
+			}
+		
+			
+		</script>
+	</head>
+	<body ng-controller="main">
+		
+	</body> 
 </html>

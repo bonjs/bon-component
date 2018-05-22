@@ -1,6 +1,4 @@
 
-
-
 var User = extend(Component, {
 	name: 'User',
 	constructor: function() {
