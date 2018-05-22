@@ -9,123 +9,45 @@
 		<script src="src/js/Observable.js"></script>
 		<script src="src/js/Component.js"></script>
 		<script src="src/js/ComponentAngular.js"></script>
+		<script src="src/js/data.js"></script>
 		
 		<script type="html" id="template">
 			<div class="component-table">
-	
 				<div class="locked-columns">
 					<table class="columns-title" border="0" cellspacing="0" cellpadding="0" >
 					  <tr>
-						<td>序号</td>
-						<td>姓名</td>
+						<td ng-repeat="col in lockedColumnsTitles">
+							{{col.header}}
+							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort != 'desc' ? 'asc' : 'desc'" ng-click="sortClick(col)">
+							</span>
+						</td>
 					  </tr>
 					</table>
 					<table class="columns-content" border="0" cellspacing="0" cellpadding="0" id="locked-block">
-					  <tr>
-						<td>001</td>
-						<td>tom</td>
-					  </tr>
-					          
+					  <tr ng-repeat="row in data">
+						<td ng-repeat="col in lockedColumnsTitles">{{row[col.dataIndex]}}</td>
+					  </tr> 
 					</table>
 				</div>
 
 				<div class="unlocked-columns">
 					<table class="columns-title" border="0" cellspacing="0" cellpadding="0" id="tableDiv_title" >
 					  <tr>
-						<td>语文</td>
-						<td>数学</td>
-						<td>英文</td>
-						<td>历史</td>
-						<td>物理</td>
-						<td>生物</td>
+						<td ng-repeat="col in unlockedColumnsTitles">
+							{{col.header}}
+							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort != 'desc' ? 'asc' : 'desc'" ng-click="sortClick(col)">
+							</span>
+						</td>
 					  </tr>
 					</table>
 					<table class="columns-content" border="0" cellspacing="0" cellpadding="0" 
 						onscroll='divScroll(this);' onmousewheel="divScroll(this);" onwheel="divScroll(this);">
-					  <tr>
-						<td>1</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>
-					   <tr>
-						<td>2</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>
-					  <tr>
-						<td>3</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>
-					  <tr>
-						<td>4</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>
-					   <tr>
-						<td>5</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>
-					   <tr>
-						<td>6</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>     
-					  <tr>
-						<td>7</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>
-					   <tr>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>
-					   <tr>
-						<td>9</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>
-						<tr>
-						<td>10</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-						<td>88</td>
-					  </tr>           
+					  <tr ng-repeat="row in data">
+						<td ng-repeat="col in unlockedColumnsTitles">{{row[col.dataIndex]}}</td>
+					  </tr>      
 					</table>
 				</div>
 				<div style="clear:both;"></div>
-				
 			</div>
 		</script>
 		
@@ -133,13 +55,10 @@
 		
 			var Table = extend(ComponentAngular, {
 				//html: "<button ng-click='say()'>{{userName}}</button>",
-				html: template.innerHTML,
-				data: [
-					{id: 1, username: 'sun', email: 'sun@163.com'},
-					{id: 2, username: 'sun2', email: 'sun@163.com'},
-					{id: 3, username: 'sun3', email: 'sun@163.com'}
-				],
-				constructor: function() {
+				
+				constructor: function(a) {
+				
+					debugger;
 					this.super(arguments);
 					
 					var me = this;
@@ -147,39 +66,86 @@
 					var app = angular.module("app", []);
 					app.controller('main', ['$scope', '$compile', function ($scope, $compile) {
 						
-						me.scope = $scope;
+						window.s = me.scope = $scope;
 						
 						me.scope.data = me.data;
 						
-						$scope.userName = 'RAY';
-						$scope.say = function() {
-							console.log('你好:' + $scope.userName);
-						};
+						$scope.sortClick = me.sortClick.bind(me);
 						
 						//通过$compile动态编译html
 						var template = angular.element(me.html);
 						var el = $compile(template)($scope);
 						
 						angular.element(document.body).append(el);
-					
+						me.initTable();
 					}]);
 				},
-				method: function() {
+				initTable: function() {
+					var me = this;
+					this.scope.lockedColumnsTitles = this.columns.filter(function(it) {
+						return it.locked === true;
+					});
 					
+					this.scope.unlockedColumnsTitles = this.columns.filter(function(it) {
+						return it.locked !== true;
+					});
+				},
+				sortClick: function(col) {
+					col.sort = (col.sort == 'asc' || col.sort == undefined) ? 'desc' : 'asc';
+					
+					this.scope.data.sort(function(a, b) {
+						debugger;
+						if(col.sort == 'asc') {
+							return a[col.dataIndex] < b[col.dataIndex];
+						} else {
+							return a[col.dataIndex] > b[col.dataIndex];
+						}
+					});
 				}
 			});
 			
-			var table = new Table();
-			
-			
+			var table = new Table({
+				html: template.innerHTML,
+				data: data,
+				columns: [
+					{
+						header : '编号',
+						dataIndex : 'id',
+						sortable: true,
+						locked: true
+					}, {
+						header : '姓名',
+						dataIndex : 'name',
+						sortable: true,
+						locked: true
+					}, {
+						header : '语文',
+						sortable: true,
+						dataIndex : 'chinese'
+					}, {
+						header : '数学',
+						dataIndex : 'math'
+					}, {
+						header : '英语',
+						dataIndex : 'english'
+					}, {
+						header : '物理',
+						dataIndex : 'physics'
+					}, {
+						header : '生物',
+						dataIndex : 'biology'
+					}, {
+						header : '化学',
+						dataIndex : 'chemistry'
+					}
+				],
+			});
 			
 			
 			
 			function divScroll(scrollDiv) {
 				var scrollTop = scrollDiv.scrollTop;
 				var scrollLeft = scrollDiv.scrollLeft;
-				
-				console.log(scrollLeft)
 				
 				document.getElementById("locked-block").scrollTop = scrollTop;
 				document.getElementById("tableDiv_title").scrollLeft = scrollLeft;
