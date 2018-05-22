@@ -2,17 +2,17 @@
 // ×é¼þ
 var Component = extend(Observable, {
 	
-	constructor: function() {
+	constructor: function(config) {
 		
 		this.super(arguments);
+		
+		this.apply(config);
 		
 		if(this.listeners) {
 			this.on(this.listeners);
 		}
 		
 		this.initComponent();
-		
-		console.log('component init')
 	},
 	
 	initComponent: function() {

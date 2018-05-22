@@ -66,6 +66,10 @@ var extend = function(){
 		});
 		*/
 		
+		sub.prototype.apply = function(defaults) {
+			apply(this, null, defaults)
+		};
+		
 		sub.prototype.super = function() {
 			var method = this.super.caller;
 			
@@ -73,7 +77,7 @@ var extend = function(){
 				if(!method.$owner) {
 					method = method.caller;
 				}
-				return method.$owner.superclass[method.$name].apply(this, arguments);
+				return method.$owner.superclass[method.$name].apply(this, arguments[0]);
 			}
 		}
 		
