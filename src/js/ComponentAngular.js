@@ -2,14 +2,14 @@
 
 var ComponentAngular = extend(Component, {
 	
-	html: [],
+	template: [],
 	
 	constructor: function() {
 		
 		this.super(arguments);
 		
 		console.log('anguler');
-		this.html = this.html instanceof Array ? this.html.join('') : this.html;
+		this.template = this.template instanceof Array ? this.template.join('') : this.template;
 		
 		
 	},

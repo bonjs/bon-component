@@ -18,7 +18,7 @@
 					  <tr>
 						<td ng-repeat="col in lockedColumnsTitles">
 							{{col.header}}
-							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort != 'desc' ? 'asc' : 'desc'" ng-click="sortClick(col)">
+							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)">
 							</span>
 						</td>
 					  </tr>
@@ -35,7 +35,7 @@
 					  <tr>
 						<td ng-repeat="col in unlockedColumnsTitles">
 							{{col.header}}
-							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort != 'desc' ? 'asc' : 'desc'" ng-click="sortClick(col)">
+							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)">
 							</span>
 						</td>
 					  </tr>
@@ -54,11 +54,9 @@
 		<script>
 		
 			var Table = extend(ComponentAngular, {
-				//html: "<button ng-click='say()'>{{userName}}</button>",
 				
 				constructor: function(a) {
 				
-					debugger;
 					this.super(arguments);
 					
 					var me = this;
@@ -73,7 +71,7 @@
 						$scope.sortClick = me.sortClick.bind(me);
 						
 						//通过$compile动态编译html
-						var template = angular.element(me.html);
+						var template = angular.element(me.template);
 						var el = $compile(template)($scope);
 						
 						angular.element(document.body).append(el);
@@ -91,22 +89,46 @@
 					});
 				},
 				sortClick: function(col) {
-					col.sort = (col.sort == 'asc' || col.sort == undefined) ? 'desc' : 'asc';
-					
+					col.sort = (col.sort == 'desc' || col.sort == undefined) ? 'asc' : 'desc';
+					var dataIndex = col.dataIndex;
 					this.scope.data.sort(function(a, b) {
-						debugger;
-						if(col.sort == 'asc') {
-							return a[col.dataIndex] < b[col.dataIndex];
+						if(typeof a[dataIndex] == 'number' && typeof b[dataIndex] == 'number') {
+							if(col.sort == 'asc') {
+								return a[dataIndex] - b[dataIndex];
+							} else {
+								return b[dataIndex] - a[dataIndex];
+							}
 						} else {
-							return a[col.dataIndex] > b[col.dataIndex];
+							if(col.sort == 'asc') {
+								return (a[dataIndex] + '').localeCompare(b[dataIndex])
+							} else {
+								return (b[dataIndex] + '').localeCompare(a[dataIndex])
+							}
 						}
+						
 					});
 				}
 			});
 			
 			var table = new Table({
-				html: template.innerHTML,
-				data: data,
+				template: template.innerHTML,
+				data: function() {
+					var arr = [];
+					
+					for(var i = 0; i < 20; i ++) {
+						arr.push({
+							id : i + 1,
+							name : 'sun' + (i + 1),
+							chinese: parseInt(Math.random() * 60 + 40),
+							math: parseInt(Math.random() * 60 + 40),
+							english: parseInt(Math.random() * 60 + 40),
+							physics: parseInt(Math.random() * 60 + 40),
+							biology: parseInt(Math.random() * 60 + 40),
+							chemistry: parseInt(Math.random() * 60 + 40)
+						});
+					}
+					return arr;
+				}(),
 				columns: [
 					{
 						header : '编号',
@@ -124,18 +146,23 @@
 						dataIndex : 'chinese'
 					}, {
 						header : '数学',
+						sortable: true,
 						dataIndex : 'math'
 					}, {
 						header : '英语',
+						sortable: true,
 						dataIndex : 'english'
 					}, {
 						header : '物理',
+						sortable: true,
 						dataIndex : 'physics'
 					}, {
 						header : '生物',
+						sortable: true,
 						dataIndex : 'biology'
 					}, {
 						header : '化学',
+						sortable: true,
 						dataIndex : 'chemistry'
 					}
 				],

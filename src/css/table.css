@@ -23,28 +23,65 @@
 }
 
 .component-table .sortable-icon {
-    width: 10px;
-    height: 10px;
     display: inline-block;
     
     margin-left: 3px;
 	position: relative;
-	height: 0px;
-	width: 0px;
 	cursor: pointer;
-	top: -3px;
+	
+	top: 0px;
+    border-left: 5px solid transparent;
+    border-top: 4px solid #90909066;
+    border-right: 5px solid transparent;
 }
+
+.component-table .sortable-icon:before {
+    top: -10px;
+    left: -5px;
+    position: absolute;
+    display: inline-block;
+    content: '';
+    border-left: 5px solid transparent;
+    border-bottom: 4px solid #90909066;
+    border-right: 5px solid transparent;
+}
+
 .component-table .asc {
-	border-left: 5px solid transparent;
-	border-top: 5px solid #999;
-	border-right: 5px solid transparent;
+	top: 0px;
+    border-left: 5px solid transparent;
+    border-top: 4px solid #90909066;
+    border-right: 5px solid transparent;
+}
+
+.component-table .asc:before {
+	top: -10px;
+    left: -5px;
+    position: absolute;
+    display: inline-block;
+    content: '';
+    border-left: 5px solid transparent;
+    border-bottom: 4px solid #999;
+    border-right: 5px solid transparent;
 }
 
 .component-table .desc {
-	border-left: 5px solid transparent;
-	border-bottom: 5px solid #999;
-	border-right: 5px solid transparent;
+	top: 0px;
+    border-left: 5px solid transparent;
+    border-top: 4px solid #999;
+    border-right: 5px solid transparent;
 }
+
+.component-table .desc:before {
+	top: -10px;
+    left: -5px;
+    position: absolute;
+    display: inline-block;
+    content: '';
+    border-left: 5px solid transparent;
+    border-bottom: 4px solid #90909066;
+    border-right: 5px solid transparent;
+}
+
 
 .component-table .unlocked-columns {
 	width:calc(100% - 211px);
