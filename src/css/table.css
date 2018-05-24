@@ -12,16 +12,25 @@
 
 .component-table table td  {
 	border:1px solid #ccc;
+	padding: 3px 0 ;
+	vertical-align: middle;
+	display: table-cell;
+}
+
+
+.component-table table .table-cell  {
 	overflow:hidden;
 	padding:0 2px;
 	
-	height: 30px;
-	min-width: 100px; 
-	max-width: 100px;  
+	//height: 30px;
+	//line-height: 30px;
 	width: 100px;
-	
+	//max-width:200px;
+	min-height:22px;
 	text-align: center;
 }
+
+
 
 .component-table .sortable-icon {
     display: inline-block;
@@ -167,7 +176,7 @@
 	cursor: pointer;
 }
 
-.component-table .row-no {
+.component-table .row-no .table-cell {
 	min-width: 30px;
     width: 30px;
 }
