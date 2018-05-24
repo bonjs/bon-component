@@ -7,6 +7,7 @@ setTimeout(function() {
 		height: 200,
 		
 		data : function () {
+			return;
 			var arr = [];
 
 			for (var i = 0; i < 20; i++) {
@@ -69,5 +70,7 @@ setTimeout(function() {
 			}
 		],
 	});
+	
+	table.load('data.json')
 
 });

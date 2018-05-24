@@ -72,9 +72,9 @@
 				</div>
 				<div class="table-footer">
 					<li class="prev page-button" ng-click="prev()"></li>
-					<li class="page-no">1</li>
-					<li class="page-no">2</li>
-					<li class="page-no">3</li>
+					
+					<li ng-repeat="pageNo in [1,2,3]" class="page-no" ng-click="pageGo(pageNo)">{{pageNo}}</li>
+					
 					<li class="next page-button" ng-click="next()"></li>
 				</div>
 			</div>

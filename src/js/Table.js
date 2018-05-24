@@ -64,6 +64,12 @@ app.directive("compileBindExpn", function ($compile) {
 var Table = extend(ComponentAngular, {
 	
 	isShowRowNo: true,	// 是否显示行号
+	
+	pageNo: 1,
+	pageSize: 10,
+	
+	pageNoKey: 'pageNo',	// 指定当前分页页码的key,默认是pageNo
+	pageSizeKey: 'pageSize',	// 指定分页一页大小的key, 默认是pageSize
 
 	constructor : function () {
 
@@ -117,6 +123,7 @@ var Table = extend(ComponentAngular, {
 		scope.checkAll = this.checkAll.bind(this);
 		scope.prev = this.prev.bind(this);
 		scope.next = this.next.bind(this);
+		scope.pageGo = this.pageGo.bind(this);
 		
 		/*
 		 * v	: 当前值
@@ -248,6 +255,8 @@ var Table = extend(ComponentAngular, {
 		this.fireEvent('titleclick', col);
 	},
 	
+	
+	
 	/**
 		params [string, array]
 	*/
@@ -256,7 +265,7 @@ var Table = extend(ComponentAngular, {
 		var me = this;
 		
 		if(typeof p == 'string') {
-			var url = p;
+			var url = this.url = p;
 			
 			// beforeload事件中可以对url进行更改, 返回新的更新后的url, 如返回false则阻止load
 			var beforeLoadResult = me.fireEvent('beforeload', url)
@@ -264,8 +273,16 @@ var Table = extend(ComponentAngular, {
 				return;
 			};
 			
-			url = beforeLoadResult !== undefined ? beforeLoadResult : url;
-			$.get(url, { }, function(data) {
+			if(typeof beforeLoadResult == 'string') {
+				url = beforeLoadResult;
+			}
+			
+			
+			var p = {};
+			p[this.pageNoKey] = this.pageNo;
+			p[this.pageSizeKey] = this.pageSize;
+			
+			$.get(url, p, function(data) {
 				afterLoad.call(me, data);
 			});
 		} else if(p instanceof Array) {
@@ -278,19 +295,27 @@ var Table = extend(ComponentAngular, {
 			 * 如果在load事件函数中没有作返回,则不对data做处理, 直接交给table处理
 			 */
 			var loadResult = this.fireEvent('load', data);
-			if(loadResult !== undefined) {
-				data = loadResult;
+			if(typeof loadResult == 'object') {
+				data = beforeLoadResult;
 			}
+			this.scope.data = this.data = data;
+			this.scope.$apply();
 			
 			this.fireEvent('afterload', data);
 		}
 	},
 	
 	prev: function() {
-		alert('prev')
+		this.pageNo > 1 && this.pageNo --;
+		this.load(this.url);
 	},
 	next: function() {
-		alert('next')
+		this.pageNo ++;
+		this.load(this.url);
+	},
+	pageGo: function(no) {
+		this.pageNo = no;
+		this.load(this.url);
 	}
 });
 
