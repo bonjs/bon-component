@@ -15,6 +15,7 @@
 	overflow:hidden;
 	padding:0 2px;
 	
+	height: 30px;
 	min-width: 100px; 
 	max-width: 100px;  
 	width: 100px;
@@ -84,7 +85,7 @@
 
 
 .component-table .unlocked-columns {
-	width:calc(100% - 211px);
+	
 }
 
 .component-table .unlocked-columns, .component-table .locked-columns  {
@@ -113,3 +114,61 @@
 .component-table .locked-columns .columns-title, .component-table  .unlocked-columns .columns-title {
 	background:#ddd;
 }
+.component-table *[col-type="checkbox"] {
+	//width: auto;
+    //min-width: 10px;
+}
+
+.component-table .table-footer {
+	height: 40px;
+	line-height: 40px;
+	margin: 0 auto;
+	text-align:center;
+	background-color:#ddd;
+}
+.component-table .table-footer ul {
+	padding: 0px;
+	margin: 0px;
+	list-style: none;
+}
+
+.component-table .table-footer  li {
+	display: inline-block;
+	list-style: none;
+	width: 40px;
+}
+
+.component-table .table-footer  .page-button {
+	cursor: pointer;
+	width: 9px;
+	height: 9px;
+	top: 4px;
+    position: relative;
+	-webkit-transform: translate(0,-50%) rotate(-135deg);  
+	transform: translate(0,-50%) rotate(-135deg);
+}
+
+.component-table .table-footer  li.prev {
+	border-right: 1px solid #999;
+	border-top: 1px solid #999;
+	
+}
+
+.component-table .table-footer  li.next {
+	border-left: 1px solid #999;
+	border-bottom: 1px solid #999;
+}
+
+.component-table .table-footer  .page-no {
+	cursor: pointer;
+}
+
+.component-table .table-footer  .page-no {
+	cursor: pointer;
+}
+
+.component-table .row-no {
+	min-width: 30px;
+    width: 30px;
+}
+

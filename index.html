@@ -5,6 +5,8 @@
 	
 		<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script> 
 	
+		<script src="http://cdn.bootcss.com/jquery/1.12.1/jquery.js"></script>
+		
 		<script src="src/js/Extend.js"></script>
 		<script src="src/js/Observable.js"></script>
 		<script src="src/js/Component.js"></script>
@@ -13,43 +15,55 @@
 		
 		<script type="html" id="template">
 			<div class="component-table">
-				<div class="locked-columns">
-					<table class="columns-title" border="0" cellspacing="0" cellpadding="0" >
-					  <tr>
-						<td ng-repeat="col in lockedColumnsTitles">
-							{{col.header}}
-							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
-							<input ng-if="col.type == 'checkbox'" type="checkbox" />
-						</td>
-					  </tr>
-					</table>
-					<table class="columns-content" border="0" cellspacing="0" cellpadding="0" id="locked-block">
-					  <tr ng-repeat="(colIndex, row) in data">
-						<td ng-repeat="col in lockedColumnsTitles ">
-							{{col.type == 'data' ? row[col.dataIndex] : ""}}
-							<input ng-if="col.type != 'data'" type="{{col.type}}" ng-checked="col.isChecked" ng-click="checkItem(row, colIndex)"/>
-						</td>
-					  </tr> 
-					</table>
-				</div>
+				<div class="table-body">
+					<div class="locked-columns">
+						
+						<table class="columns-title" border="0" cellspacing="0" cellpadding="0" >
+						  <tr>
+							<td ng-if="isShowRowNo" class="row-no"></td>
+							<td ng-repeat="col in lockedColumnsTitles" col-type="{{col.type}}">
+								{{col.header}}
+								<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
+								<input ng-if="col.type == 'checkbox'" type="checkbox"  ng-checked="col.isCheckAll" ng-click="checkAll($event, col)" />
+							</td>
+						  </tr>
+						</table>
+						<table class="columns-content" border="0" cellspacing="0" cellpadding="0" id="locked-block">
+						  <tr ng-repeat="(rowIndex, row) in data">
+							<td ng-if="isShowRowNo" class="row-no">{{rowIndex + 1}}</td>
+							<td ng-repeat="col in lockedColumnsTitles " col-type="{{col.type}}" ng-bind-html="col.tpl | to_trusted">
+								{{col.type == 'data' ? row[col.dataIndex] : ""}}
+								<input ng-if="col.type != 'data'" type="{{col.type}}" ng-checked="row.isChecked" ng-click="checkItem($event, row, rowIndex, col)"/>
+							</td>
+						  </tr> 
+						</table>
+					</div>
 
-				<div class="unlocked-columns">
-					<table class="columns-title" border="0" cellspacing="0" cellpadding="0" id="tableDiv_title" >
-					  <tr>
-						<td ng-repeat="col in unlockedColumnsTitles">
-							{{col.header}}
-							<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
-						</td>
-					  </tr>
-					</table>
-					<table class="columns-content" border="0" cellspacing="0" cellpadding="0" 
-						onscroll='divScroll(this);' onmousewheel="divScroll(this);" onwheel="divScroll(this);">
-					  <tr ng-repeat="row in data">
-						<td ng-repeat="col in unlockedColumnsTitles">{{row[col.dataIndex]}}</td>
-					  </tr>      
-					</table>
+					<div class="unlocked-columns">
+						<table class="columns-title" border="0" cellspacing="0" cellpadding="0" id="tableDiv_title" >
+						  <tr>
+							<td ng-repeat="col in unlockedColumnsTitles">
+								{{col.header}}
+								<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
+							</td>
+						  </tr>
+						</table>
+						<table class="columns-content" border="0" cellspacing="0" cellpadding="0" 
+							onscroll='divScroll(this);' onmousewheel="divScroll(this);" onwheel="divScroll(this);">
+						  <tr ng-repeat="row in data">
+							<td ng-repeat="col in unlockedColumnsTitles">{{row[col.dataIndex]}}</td>
+						  </tr>      
+						</table>
+					</div>
+					<div style="clear:both;"></div>
 				</div>
-				<div style="clear:both;"></div>
+				<div class="table-footer">
+					<li class="prev page-button" ng-click="prev()"></li>
+					<li class="page-no">1</li>
+					<li class="page-no">2</li>
+					<li class="page-no">3</li>
+					<li class="next page-button" ng-click="next()"></li>
+				</div>
 			</div>
 		</script>
 		
