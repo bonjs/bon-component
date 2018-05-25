@@ -106,22 +106,6 @@ var Table = extend(ComponentAngular, {
 		tmpScope = undefined;
 		
 		
-		
-		// 左侧locked列加载完毕,以便获取size计算unlocked列的size
-		this.scope.$on('repeatFinished', function (ngRepeatFinishedEvent) {
-			
-			me.fixSize(el);
-		});
-		
-		
-		this.scope.load = function() {
-			
-			alert('load')
-		}
-		this.scope.$on('$viewContentLoaded', function() {  
-			console.log('haha')
-		});
-		
 		if(this.renderTo instanceof jQuery) {
 			this.renderTo = this.renderTo[0];
 		} else if(this.renderTo instanceof HTMLElement) {
@@ -131,6 +115,10 @@ var Table = extend(ComponentAngular, {
 		}
 		
 		angular.element(this.renderTo).append(element);
+		$('.table-body', this.el).height(this.height - $('.table-footer', this.el).height());
+		
+		el.style.height = this.height;
+		el.style.width = this.width;
 	},
 	initEvent: function() {
 		
@@ -167,14 +155,33 @@ var Table = extend(ComponentAngular, {
 		
 		scope.isShowRowNo = this.isShowRowNo;
 		
+		// 左侧locked列加载完毕,以便获取size计算unlocked列的size
+		this.scope.$on('repeatFinished', function (ngRepeatFinishedEvent) {
+			
+			me.fixSize(me.el);
+		});
+		
+		angular.element(window).bind('load', function() {  
+			console.log('ok')
+		});
+		
+		
+		this.scope.load = function() {
+			
+			alert('load')
+		}
+		this.scope.$on('$viewContentLoaded', function() {  
+			console.log('haha')
+		});
+		
 		
 		// 处理滚动条
 		$('.table-body', this.el).on('wheel', function(e){
 			
-			var scrollTop = $('.scroll-bar-y').scrollTop();
-			var scrollLeft = $('.scroll-bar-x').scrollLeft();
+			var scrollTop = $('.scroll-bar-y', me.el).scrollTop();
+			var scrollLeft = $('.scroll-bar-x', me.el).scrollLeft();
 			
-			$('.scroll-bar-y').scrollTop(scrollTop - e.originalEvent.wheelDeltaY);
+			$('.scroll-bar-y', me.el).scrollTop(scrollTop - e.originalEvent.wheelDeltaY);
 
 			$(".unlocked-columns .columns-title, .unlocked-columns .columns-content", me.el).scrollLeft(scrollLeft);
 			
@@ -183,8 +190,8 @@ var Table = extend(ComponentAngular, {
 		
 		$('.scroll-bar-y, .scroll-bar-x', this.el).on('scroll', function() {
 			
-			var scrollTop = $('.scroll-bar-y').scrollTop();
-			var scrollLeft = $('.scroll-bar-x').scrollLeft();
+			var scrollTop = $('.scroll-bar-y', me.el).scrollTop();
+			var scrollLeft = $('.scroll-bar-x', me.el).scrollLeft();
 
 			$(".unlocked-columns .columns-title, .unlocked-columns .columns-content", me.el).scrollLeft(scrollLeft);
 			
@@ -225,33 +232,38 @@ var Table = extend(ComponentAngular, {
 		
 	},
 	fixSize: function(el) {
-		var borderWidth = +el.style.borderWidth.replace(/px/, '');
-		
-		el.style.height = this.height - borderWidth * 2;
-		el.style.width = this.width - borderWidth * 2;
+		var columnsTitle = $('.columns-title', this.el);
+		var columnsContent = $('.columns-content', this.el);
 		
 		var lockedColumns = $('.locked-columns', this.el);
 		var unlockedColumns = $('.unlocked-columns', this.el);
 		
-		var columnsTitle = $('.columns-title', this.el);
-		var columnsContent = $('.columns-content', this.el);
-		
+		var tableBody = $('.table-body', this.el);
 		var footer = $('.table-footer', this.el);
+		
+		var borderWidth = +el.style.borderWidth.replace(/px/, '');
+		
+		//el.style.height = this.height - borderWidth * 2;
+		//el.style.width = this.width - borderWidth * 2;
+		
+		debugger
+		tableBody.height(this.height - footer.height());
+		
 		
 		unlockedColumns.width(this.width - lockedColumns.width() - 1);
 		
-		columnsContent.height(this.height - columnsTitle.height() - footer.height() + 2);
+		columnsContent.height(this.height - columnsTitle.height() - footer.height());
 		
-		$('.scroll-bar-y').height(this.height - columnsTitle.height() - footer.height() + 2 - 15);
+		/**
+		 * 处理y滚动条
+		 * scroll-bar-y height = columns-content的高度 - 滚动条宽度
+		 */
+		$('.scroll-bar-y', this.el).css({
+			top: columnsTitle.height(),
+			height: columnsContent.height() - $('.scroll-bar-x', this.el).height()
+		});
 		
-		
-		unlockedColumns.show();
-			
-		console.log($('.columns-content tbody').height())
-		$('.scroll-bar-y div').height($('.columns-content tbody').height());
-		
-		$('.scroll-bar-x').width(this.width - lockedColumns.width() - 1)
-		
+		$('.scroll-bar-y div', this.el).height($('.columns-content tbody', this.el).height());
 		
 	},
 	
@@ -390,20 +402,13 @@ var Column = extend(Component, {
 
 });
 
-function divScrolldd(scrollDiv) {
-	debugger;
-	var scrollTop = scrollDiv.scrollTop;
-	var scrollLeft = scrollDiv.scrollLeft;
 
-	document.querySelector('.columns-content').scrollTop = scrollTop;
-	document.querySelector(".columns-title").scrollLeft = scrollLeft;
-}
-
-
+/*
 app.filter('to_trusted', ['$sce', function ($sce) {
 		return function (text) {
 			return $sce.trustAsHtml(text);
 		};
 	}
 ]);
+*/
 

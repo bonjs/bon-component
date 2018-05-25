@@ -7,7 +7,7 @@ setTimeout(function() {
 		renderTo: 'main',
 		
 		width: 500,
-		height: 230,
+		height: 300,
 		
 		pageSizeKey: 'size',
 		pageNoKey: 'no',
