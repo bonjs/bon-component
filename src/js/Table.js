@@ -29,14 +29,18 @@ var tableComponentDirective = function () {
 };
 app.directive('tableComponent', tableComponentDirective);
 
-app.directive('repeatFinished',function(){
+
+app.directive('repeatFinished', function ($timeout) {
     return {
-        link: function(scope,element,attr){
-            if(scope.$last == true){
-                scope.$emit('repeatFinished');
+        restrict: 'A',
+        link: function(scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function() {
+                    scope.$emit('repeatFinished');
+                });
             }
         }
-    }
+    };
 });
 
 app.directive("compileBindExpn", function ($compile) {
@@ -79,7 +83,7 @@ var Table = extend(ComponentAngular, {
 		
 		this.initTemplate();
 		
-		this.initScopeEvent();
+		this.initEvent();
 		
 		this.initTable();
 	
@@ -105,13 +109,30 @@ var Table = extend(ComponentAngular, {
 		
 		// 左侧locked列加载完毕,以便获取size计算unlocked列的size
 		this.scope.$on('repeatFinished', function (ngRepeatFinishedEvent) {
+			
 			me.fixSize(el);
 		});
 		
 		
-		angular.element(document.body).append(element);
+		this.scope.load = function() {
+			
+			alert('load')
+		}
+		this.scope.$on('$viewContentLoaded', function() {  
+			console.log('haha')
+		});
+		
+		if(this.renderTo instanceof jQuery) {
+			this.renderTo = this.renderTo[0];
+		} else if(this.renderTo instanceof HTMLElement) {
+			this.renderTo = this.renderTo;
+		} else if(typeof this.renderTo == 'string') {
+			this.renderTo = document.getElementById(this.renderTo);
+		}
+		
+		angular.element(this.renderTo).append(element);
 	},
-	initScopeEvent: function() {
+	initEvent: function() {
 		
 		var me = this;
 		
@@ -124,6 +145,7 @@ var Table = extend(ComponentAngular, {
 		scope.prev = this.prev.bind(this);
 		scope.next = this.next.bind(this);
 		scope.pageGo = this.pageGo.bind(this);
+		
 		
 		/*
 		 * v	: 当前值
@@ -144,11 +166,36 @@ var Table = extend(ComponentAngular, {
 		}
 		
 		scope.isShowRowNo = this.isShowRowNo;
+		
+		
+		// 处理滚动条
+		$('.table-body', this.el).on('wheel', function(e){
+			
+			var scrollTop = $('.scroll-bar-y').scrollTop();
+			var scrollLeft = $('.scroll-bar-x').scrollLeft();
+			
+			$('.scroll-bar-y').scrollTop(scrollTop - e.originalEvent.wheelDeltaY);
+
+			$(".unlocked-columns .columns-title, .unlocked-columns .columns-content", me.el).scrollLeft(scrollLeft);
+			
+			$('.columns-content', me.el).scrollTop(scrollTop);
+		});
+		
+		$('.scroll-bar-y, .scroll-bar-x', this.el).on('scroll', function() {
+			
+			var scrollTop = $('.scroll-bar-y').scrollTop();
+			var scrollLeft = $('.scroll-bar-x').scrollLeft();
+
+			$(".unlocked-columns .columns-title, .unlocked-columns .columns-content", me.el).scrollLeft(scrollLeft);
+			
+			$('.columns-content', me.el).scrollTop(scrollTop);
+		});
 	},
 	initTable : function () {
 		var me = this;
 		
 		this.scope.data = this.data;
+		this.scope.pageNo = this.pageNo;
 		
 		this.columns = this.columns.reduce(function (arr, it) {
 			var col = new Column({
@@ -195,7 +242,16 @@ var Table = extend(ComponentAngular, {
 		
 		columnsContent.height(this.height - columnsTitle.height() - footer.height() + 2);
 		
+		$('.scroll-bar-y').height(this.height - columnsTitle.height() - footer.height() + 2 - 15);
+		
+		
 		unlockedColumns.show();
+			
+		console.log($('.columns-content tbody').height())
+		$('.scroll-bar-y div').height($('.columns-content tbody').height());
+		
+		$('.scroll-bar-x').width(this.width - lockedColumns.width() - 1)
+		
 		
 	},
 	
@@ -306,15 +362,16 @@ var Table = extend(ComponentAngular, {
 	},
 	
 	prev: function() {
-		this.pageNo > 1 && this.pageNo --;
+		this.pageNo >= 1 && (this.scope.pageNo = this.pageNo --);
 		this.load(this.url);
+		
 	},
 	next: function() {
-		this.pageNo ++;
+		this.scope.pageNo = this.pageNo ++;
 		this.load(this.url);
 	},
 	pageGo: function(no) {
-		this.pageNo = no;
+		this.pageNo = this.scope.pageNo = no;
 		this.load(this.url);
 	}
 });
@@ -333,20 +390,15 @@ var Column = extend(Component, {
 
 });
 
-function divScroll(scrollDiv) {
+function divScrolldd(scrollDiv) {
+	debugger;
 	var scrollTop = scrollDiv.scrollTop;
 	var scrollLeft = scrollDiv.scrollLeft;
 
-	document.getElementById("locked-block").scrollTop = scrollTop;
-	document.getElementById("tableDiv_title").scrollLeft = scrollLeft;
+	document.querySelector('.columns-content').scrollTop = scrollTop;
+	document.querySelector(".columns-title").scrollLeft = scrollLeft;
 }
 
-function wheel(event) {
-	var evt = event || window.event;
-	var bodyDivY = document.getElementById("tableDiv_y");
-	var scrollDivY = document.getElementById("scrollDiv_y");
-	scrollDivY.scrollTop = scrollDivY.scrollTop + evt.deltaY * 7;
-}
 
 app.filter('to_trusted', ['$sce', function ($sce) {
 		return function (text) {

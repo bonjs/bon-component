@@ -3,8 +3,14 @@
 setTimeout(function() {
 		
 	var table = new Table({
+		
+		renderTo: 'main',
+		
 		width: 500,
-		height: 200,
+		height: 230,
+		
+		pageSizeKey: 'size',
+		pageNoKey: 'no',
 		
 		data : function () {
 			return;
@@ -40,6 +46,11 @@ setTimeout(function() {
 			}, {
 				header : '编号',
 				dataIndex : 'id',
+				sortable : true,
+				locked : true,
+			}, {
+				header : '姓名',
+				dataIndex : 'name',
 				sortable : true,
 				locked : true,
 			

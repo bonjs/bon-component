@@ -114,7 +114,8 @@
 	overflow:hidden
 }
 .component-table .unlocked-columns .columns-content {
-	overflow:overlay; 
+	//overflow:overlay;
+	overflow:hidden;
 }
 
 .component-table .locked-columns .columns-content {
@@ -181,3 +182,26 @@
     width: 30px;
 }
 
+.component-table .current-page {
+	background-color: #789;
+	
+}
+
+.component-table  .scroll-bar-y {
+	display: block;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: absolute;
+    top: 31px;
+    right: 0px;
+    height: 115px;
+}
+
+
+.component-table  .scroll-bar-x {
+    //width: 254px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: absolute;
+    bottom: 0px;
+}
