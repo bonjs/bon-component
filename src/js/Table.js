@@ -67,6 +67,8 @@ app.directive("compileBindExpn", function ($compile) {
 
 var Table = extend(ComponentAngular, {
 	
+	data: [],
+	
 	isShowRowNo: true,	// 是否显示行号
 	
 	pageNo: 1,
@@ -257,6 +259,9 @@ var Table = extend(ComponentAngular, {
 		
 		columnsContent.height(this.height - columnsTitle.height() - footer.height());
 		
+		$('.scroll-bar-y div', this.el).height($('.columns-content tbody', this.el).height());
+		$('.scroll-bar-x div', this.el).width($('.unlocked-columns .columns-content tbody', this.el).width());
+		
 		/**
 		 * 处理y滚动条
 		 * scroll-bar-y height = columns-content的高度 - 滚动条宽度
@@ -265,9 +270,6 @@ var Table = extend(ComponentAngular, {
 			top: columnsTitle.height(),
 			height: columnsContent.height() - $('.scroll-bar-x', this.el).height()
 		});
-		
-		$('.scroll-bar-y div', this.el).height($('.columns-content tbody', this.el).height());
-		$('.scroll-bar-x div', this.el).width($('.unlocked-columns .columns-content tbody', this.el).width());
 		
 	},
 	
