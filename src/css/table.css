@@ -196,7 +196,7 @@
 .component-table  .scroll-bar-y {
 	display: block;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     position: absolute;
     top: 31px;
     right: 0px;
@@ -206,7 +206,7 @@
 
 .component-table .scroll-bar-x {
     width: 100%;
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
     position: absolute;
     bottom: 0px;

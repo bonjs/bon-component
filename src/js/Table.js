@@ -186,6 +186,8 @@ var Table = extend(ComponentAngular, {
 			$(".unlocked-columns .columns-title, .unlocked-columns .columns-content", me.el).scrollLeft(scrollLeft);
 			
 			$('.columns-content', me.el).scrollTop(scrollTop);
+			
+			return false;
 		});
 		
 		$('.scroll-bar-y, .scroll-bar-x', this.el).on('scroll', function() {
@@ -196,6 +198,7 @@ var Table = extend(ComponentAngular, {
 			$(".unlocked-columns .columns-title, .unlocked-columns .columns-content", me.el).scrollLeft(scrollLeft);
 			
 			$('.columns-content', me.el).scrollTop(scrollTop);
+			return false;
 		});
 	},
 	initTable : function () {
@@ -250,7 +253,7 @@ var Table = extend(ComponentAngular, {
 		tableBody.height(this.height - footer.height());
 		
 		
-		unlockedColumns.width(this.width - lockedColumns.width() - 1);
+		unlockedColumns.width(this.width - lockedColumns.width());
 		
 		columnsContent.height(this.height - columnsTitle.height() - footer.height());
 		
@@ -264,6 +267,7 @@ var Table = extend(ComponentAngular, {
 		});
 		
 		$('.scroll-bar-y div', this.el).height($('.columns-content tbody', this.el).height());
+		$('.scroll-bar-x div', this.el).width($('.unlocked-columns .columns-content tbody', this.el).width());
 		
 	},
 	
