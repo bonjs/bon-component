@@ -30,13 +30,27 @@ var tableComponentDirective = function () {
 app.directive('tableComponent', tableComponentDirective);
 
 
-app.directive('repeatFinished', function ($timeout) {
+app.directive('tableRowsRepeatFinished', function ($timeout) {
     return {
         restrict: 'A',
         link: function(scope, element, attr) {
             if (scope.$last === true) {
                 $timeout(function() {
-                    scope.$emit('repeatFinished');
+                    scope.$emit('tableRowsRepeatFinished');
+                });
+            }
+        }
+    };
+});
+
+app.directive('tableColsRepeatFinished', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function() {
+					console.log('cols')
+                    scope.$emit('tableColsRepeatFinished');
                 });
             }
         }
@@ -158,12 +172,22 @@ var Table = extend(ComponentAngular, {
 		
 		scope.isShowRowNo = this.isShowRowNo;
 		
-		// 左侧locked列加载完毕,以便获取size计算unlocked列的size
-		this.scope.$on('repeatFinished', function (ngRepeatFinishedEvent) {
-			console.log('load')
-			debugger;
-			me.fixSize();
+		// 数据渲染完毕后设置Y滚动条的高度
+		this.scope.$on('tableRowsRepeatFinished', function (ngRepeatFinishedEvent) {
+			console.log('rows load')
+			
+			$('.scroll-bar-y div', me.el).height($('.columns-content tbody', me.el).height());
 		});
+		/*
+		this.scope.$on('tableColsRepeatFinished', function (ngRepeatFinishedEvent) {
+			console.log('cols load')
+			debugger;
+			//me.initSize();
+		});
+		*/
+		
+		
+		
 		
 		angular.element(window).bind('load', function() {  
 			console.log('ok')
@@ -227,6 +251,7 @@ var Table = extend(ComponentAngular, {
 		});
 		
 		this.scope.$apply();
+		
 		this.initSize();
 	},
 	
@@ -252,30 +277,18 @@ var Table = extend(ComponentAngular, {
 		
 		tableBody.height(this.height - footer.height());
 		
+		
 		columnsContent.height(this.height - columnsTitle.height() - footer.height());
 		
-		$('.scroll-bar-x div', el).width($('.unlocked-columns .columns-content tbody', el).width());
+		$('.scroll-bar-x div', el).width($('.unlocked-columns .columns-title tbody', el).width());
 		
-		
-		$('.scroll-bar-y', el).css({
-			top: columnsTitle.height()
-		});
-		
-	},
-	
-	fixSize: function() {
-		
-		var el = this.el;
-		
-		var columnsContent = $('.columns-content', el);
-		
-		$('.scroll-bar-y div', el).height($('.columns-content tbody', el).height());
 		
 		/**
 		 * 处理y滚动条
 		 * scroll-bar-y height = columns-content的高度 - 滚动条宽度
 		 */
 		$('.scroll-bar-y', el).css({
+			top: columnsTitle.height(),
 			height: columnsContent.height() - $('.scroll-bar-x', el).height()
 		});
 		

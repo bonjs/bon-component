@@ -13,7 +13,6 @@ setTimeout(function() {
 		pageNoKey: 'no',
 		
 		data : function () {
-			return;
 			var arr = [];
 
 			for (var i = 0; i < 20; i++) {
@@ -82,7 +81,6 @@ setTimeout(function() {
 		],
 	});
 	
-	table.load('data.json');
 	
 	$('#col2').click(function() {
 		table.columns = [{
