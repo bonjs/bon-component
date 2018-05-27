@@ -34,7 +34,7 @@
 						  </tr>
 						</table>
 						<table class="columns-content" border="0" cellspacing="0" cellpadding="0">
-						  <tr ng-repeat="(rowIndex, row) in data" repeat-finished>
+						  <tr ng-repeat="(rowIndex, row) in data" table-rows-repeat-finished>
 							<td ng-if="isShowRowNo" class="row-no"><div class="table-cell">{{rowIndex + 1}}</td>
 							<td ng-repeat="(colIndex, col) in lockedColumnsTitles " col-type="{{col.type}}" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
 								<!--
@@ -92,6 +92,6 @@
 	<body ng-controller="main">
 		<div id=main></div>
 		
-		<button id=col2>col2</button>
+		<button id=col2>改变列, 改变data</button>
 	</body> 
 </html>
