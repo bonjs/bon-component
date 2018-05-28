@@ -1,16 +1,5 @@
 
 
-var app = angular.module("app", []);
-
-app.controller('main', ['$scope', '$compile', function ($scope, $compile) {
-	
-		window.s = window.globalScope = $scope;
-		window.c = window.globalCompile = $compile;
-	}
-]);
-
-
-
 
 var tmpScope;
 
@@ -250,6 +239,21 @@ var Table = extend(ComponentAngular, {
 			return it.locked !== true;
 		});
 		
+		this.scope.pageNos = function() {
+			var arr = [];
+			
+			if(me.pageNo == 1) {
+				arr.push(me.pageNo)
+				arr.push(me.pageNo + 1 )
+				arr.push(me.pageNo + 2)
+			} else {
+				arr.push(me.pageNo - 1)
+				arr.push(me.pageNo )
+				arr.push(me.pageNo + 1)
+			}
+			return arr;
+		}();
+		
 		this.scope.$apply();
 		
 		this.initSize();
@@ -401,16 +405,34 @@ var Table = extend(ComponentAngular, {
 	},
 	
 	prev: function() {
-		this.pageNo >= 1 && (this.scope.pageNo = this.pageNo --);
+		this.pageNo > 1 && (this.scope.pageNo = this.pageNo --);
+		this.pageGo(this.pageNo);
 		this.load(this.url);
 		
 	},
 	next: function() {
 		this.scope.pageNo = this.pageNo ++;
+		this.pageGo(this.pageNo);
 		this.load(this.url);
 	},
 	pageGo: function(no) {
+		var me = this;
 		this.pageNo = this.scope.pageNo = no;
+		
+		this.scope.pageNos = function() {
+			var arr = [];
+			
+			if(me.pageNo == 1) {
+				arr.push(me.pageNo)
+				arr.push(me.pageNo + 1 )
+				arr.push(me.pageNo + 2)
+			} else {
+				arr.push(me.pageNo - 1)
+				arr.push(me.pageNo )
+				arr.push(me.pageNo + 1)
+			}
+			return arr;
+		}();
 		this.load(this.url);
 	}
 });
