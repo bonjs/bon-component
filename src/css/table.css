@@ -65,7 +65,7 @@
 .component-table .asc {
 	top: 0px;
     border-left: 5px solid transparent;
-    border-top: 4px solid #90909066;
+    border-top: 4px solid #B2CF07;
     border-right: 5px solid transparent;
 }
 
@@ -76,14 +76,14 @@
     display: inline-block;
     content: '';
     border-left: 5px solid transparent;
-    border-bottom: 4px solid #999;
+    border-bottom: 4px solid #90909066;
     border-right: 5px solid transparent;
 }
 
 .component-table .desc {
 	top: 0px;
     border-left: 5px solid transparent;
-    border-top: 4px solid #999;
+    border-top: 4px solid #90909066;
     border-right: 5px solid transparent;
 }
 
@@ -94,7 +94,7 @@
     display: inline-block;
     content: '';
     border-left: 5px solid transparent;
-    border-bottom: 4px solid #90909066;
+    border-bottom: 4px solid #B2CF07;
     border-right: 5px solid transparent;
 }
 
@@ -128,7 +128,8 @@
 	overflow:hidden; 
 }
 .component-table .locked-columns .columns-title, .component-table  .unlocked-columns .columns-title {
-	background:#ddd;
+	background-color: white;
+	color:#bbb;
 }
 .component-table *[col-type="checkbox"] {
 	//width: auto;
@@ -136,11 +137,10 @@
 }
 
 .component-table .table-footer {
-	height: 40px;
-	line-height: 40px;
+	height: 60px;
+	line-height: 60px;
 	margin: 0 auto;
 	text-align:center;
-	background-color:#ddd;
 }
 .component-table .table-footer ul {
 	padding: 0px;
@@ -165,14 +165,14 @@
 }
 
 .component-table .table-footer  li.prev {
-	border-right: 1px solid #999;
-	border-top: 1px solid #999;
+	border-right: 1px solid #ccc;
+	border-top: 1px solid #ccc;
 	
 }
 
 .component-table .table-footer  li.next {
-	border-left: 1px solid #999;
-	border-bottom: 1px solid #999;
+	border-left: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 }
 
 .component-table .table-footer  .page-no {
@@ -186,28 +186,66 @@
 .component-table .row-no .table-cell {
 	min-width: 30px;
     width: 30px;
+	color: #bbb;
 }
 
-.component-table .current-page {
+.component-table li.current-page {
 	background-color: #789;
+	
+	background-color: #B2CF07;
+    color: #fff;
+	
+	
+	border-radius: 14px;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    padding: 0;
+    border: none;
+    margin-left: 0;
 	
 }
 
 .component-table  .scroll-bar-y {
 	display: block;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     position: absolute;
     top: 31px;
     right: 0px;
     height: 0;
+	
+	width: 10px;
+	border-radius: 5px;
+	background-color: #33333333;
 }
-
+.component-table .scroll-bar-y  div{
+   position: relative;
+   width:100%;
+   border-radius: 5px;
+   background-color: #80808080;
+}
 
 .component-table .scroll-bar-x {
     width: 100%;
-    overflow-x: auto;
+	height: 10px;
+    overflow-x: hidden;
     overflow-y: hidden;
     position: absolute;
     bottom: 0px;
+	border-radius: 5px;
+	background-color: #33333333;
 }
+.component-table .scroll-bar-x  div{
+   position: relative;
+   height:100%;
+   border-radius: 5px;
+   background-color: #80808080;
+}
+
+.component-table input[type="checkbox"] {
+	display: inherit;
+	width: inherit;
+    height: inherit;
+}
+

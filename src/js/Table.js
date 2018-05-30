@@ -67,7 +67,6 @@ app.directive("compileBindExpn", function ($compile) {
 
 
 
-
 var Table = extend(ComponentAngular, {
 	
 	data: [],
@@ -163,9 +162,44 @@ var Table = extend(ComponentAngular, {
 		
 		// 数据渲染完毕后设置Y滚动条的高度
 		this.scope.$on('tableRowsRepeatFinished', function (ngRepeatFinishedEvent) {
-			console.log('rows load')
 			
-			$('.scroll-bar-y div', me.el).height($('.columns-content tbody', me.el).height());
+			// 垂直滚动条
+			me.dragV = new ScrollBar({
+				el: $('.scroll-bar-y', me.el),
+				dependEl: $('.columns-content tbody', me.el),
+				listeners: {
+					drag: function(barLeft, barTop) {
+						debugger
+						var contentTop = barTop / this.rateHeight;
+						$('.columns-content', me.el).scrollTop(contentTop);
+					}
+				}
+				
+			});
+			
+			// 水平滚动条
+			me.dragH = window.drag = new ScrollBar({
+				el: $('.scroll-bar-x', me.el),
+				dependEl: $('.unlocked-columns .columns-title tbody', me.el),
+				type: 'h',
+				listeners: {
+					drag: function(barLeft, barTop) {
+						debugger
+						var contentLeft = barLeft / this.rateWidth;
+						$(".unlocked-columns .columns-title, .unlocked-columns .columns-content", me.el).scrollLeft(contentLeft);
+					}
+				}
+				
+			});
+			
+			
+			return;
+				var contentHeight = $('.unlocked-columns .columns-content tbody').height();
+				var bodyHeight = $('.columns-content', me.el).height();
+				debugger
+				var scrollBarHeight = bodyHeight * bodyHeight / contentHeight;
+				
+				$('.scroll-bar-y div', me.el).height(scrollBarHeight);
 		});
 		/*
 		this.scope.$on('tableColsRepeatFinished', function (ngRepeatFinishedEvent) {
@@ -182,23 +216,28 @@ var Table = extend(ComponentAngular, {
 			console.log('ok')
 		});
 		
+
+		
+		
+		
+		
+		
+		
+		
 		
 		// 处理滚动条
 		$('.table-body', this.el).on('wheel', function(e){
 			
-			var scrollTop = $('.scroll-bar-y', me.el).scrollTop();
-			var scrollLeft = $('.scroll-bar-x', me.el).scrollLeft();
+			var barTop = +me.dragV.bar.css('top').replace('px', '');
 			
-			$('.scroll-bar-y', me.el).scrollTop(scrollTop - e.originalEvent.wheelDeltaY);
-
-			$(".unlocked-columns .columns-title, .unlocked-columns .columns-content", me.el).scrollLeft(scrollLeft);
-			
-			$('.columns-content', me.el).scrollTop(scrollTop);
+			barTop = barTop - e.originalEvent.wheelDeltaY * me.dragV.rateHeight;
+		
+			me.dragV.dragBar(null, barTop);
 			
 			return false;
 		});
 		
-		$('.scroll-bar-y, .scroll-bar-x', this.el).on('scroll', function() {
+		$('.scrfdafdsaoll-bar-y,fdasfd .scroll-bar-x', this.el).on('scroll', function() {
 			
 			var scrollTop = $('.scroll-bar-y', me.el).scrollTop();
 			var scrollLeft = $('.scroll-bar-x', me.el).scrollLeft();
@@ -242,14 +281,14 @@ var Table = extend(ComponentAngular, {
 		this.scope.pageNos = function() {
 			var arr = [];
 			
-			if(me.pageNo == 1) {
-				arr.push(me.pageNo)
-				arr.push(me.pageNo + 1 )
-				arr.push(me.pageNo + 2)
+			if(me.pageNo <= 3) {
+				arr.push.apply(arr, [1, 2, 3, 4, 5]);
 			} else {
-				arr.push(me.pageNo - 1)
-				arr.push(me.pageNo )
-				arr.push(me.pageNo + 1)
+				arr.push(me.pageNo - 2);
+				arr.push(me.pageNo - 1);
+				arr.push(me.pageNo);
+				arr.push(me.pageNo + 1);
+				arr.push(me.pageNo + 2);
 			}
 			return arr;
 		}();
@@ -284,17 +323,26 @@ var Table = extend(ComponentAngular, {
 		
 		columnsContent.height(this.height - columnsTitle.height() - footer.height());
 		
-		$('.scroll-bar-x div', el).width($('.unlocked-columns .columns-title tbody', el).width());
-		
 		
 		/**
 		 * 处理y滚动条
 		 * scroll-bar-y height = columns-content的高度 - 滚动条宽度
 		 */
+		
 		$('.scroll-bar-y', el).css({
 			top: columnsTitle.height(),
 			height: columnsContent.height() - $('.scroll-bar-x', el).height()
 		});
+		
+		
+		if(this.dragH) {
+			this.dragH.fixSize();
+			this.dragH.dragBar(0, 0);
+		}
+		if(this.dragV) {
+			this.dragV.fixSize();
+			this.dragV.dragBar(0, 0);
+		}
 		
 	},
 	
@@ -422,14 +470,14 @@ var Table = extend(ComponentAngular, {
 		this.scope.pageNos = function() {
 			var arr = [];
 			
-			if(me.pageNo == 1) {
-				arr.push(me.pageNo)
-				arr.push(me.pageNo + 1 )
-				arr.push(me.pageNo + 2)
+			if(me.pageNo <= 3) {
+				arr.push.apply(arr, [1, 2, 3, 4, 5]);
 			} else {
-				arr.push(me.pageNo - 1)
-				arr.push(me.pageNo )
-				arr.push(me.pageNo + 1)
+				arr.push(me.pageNo - 2);
+				arr.push(me.pageNo - 1);
+				arr.push(me.pageNo);
+				arr.push(me.pageNo + 1);
+				arr.push(me.pageNo + 2);
 			}
 			return arr;
 		}();
@@ -447,6 +495,122 @@ var Column = extend(Component, {
 		this.super(arguments);
 
 		var me = this;
+	}
+
+});
+
+var ScrollBar = extend(Component, {
+	
+	el: null,
+	type: 'v',
+	constructor : function () {
+
+		this.super(arguments);
+
+		var me = this;
+		
+		
+		var isDrag = false;
+		var x, y;// 拖动位置
+		
+		var el = this.el;
+		var bar = this.bar = $('div', this.el);
+		
+		
+		this.fixSize();
+		
+		bar.on('mousedown', function(e) {
+			isDrag = true;
+			x = e.clientX - bar[0].offsetLeft;
+			y = e.clientY - bar[0].offsetTop;
+		});
+		
+		$(document).on('mousemove', function(e) {
+			if(isDrag) {
+				
+				var barLeft = e.clientX - x;
+				var barTop = e.clientY - y;
+				
+				//var contentLeft = barLeft / rateWidth;
+				//var contentTop = barTop / rateHeight;
+				
+				//me.fireEvent('drag', barLeft, barTop);
+				
+				me.dragBar(barLeft, barTop)
+				
+				return false;
+			}
+		});
+		
+		$(document).on('mouseup', function(e) {
+			isDrag = false;
+		});
+		
+		$(document).on('mouseout', function(e) {
+			if(!me.isParent(e.target, this.body) && e.target != this.body) {
+				isDrag = false;	
+			}
+		});
+	},
+	
+	fixSize: function() {
+		
+		var contentWidth = this.dependEl.width();
+		var contentHeight = this.dependEl.height();
+		
+		var elHeight = this.el.height();
+		var elWidth = this.el.width();
+		
+		var rateHeight = this.rateHeight = (elHeight - elHeight * elHeight / contentHeight) / (contentHeight - elHeight);
+		var rateWidth = this.rateWidth = (elWidth - elWidth * elWidth / contentWidth) / (contentWidth - elWidth);
+		
+		
+		if(this.type == 'v') {
+			this.bar.height(this.el.height() * this.el.height() / contentHeight);
+		} else if(this.type == 'h') {
+			this.bar.width(this.el.width() * this.el.width() / contentWidth);
+		}
+	},
+	dragBar: function(barLeft, barTop) {
+		var me = this;
+		
+		if(barLeft != undefined && me.type == 'h') {
+			if(barLeft < 0) {
+				barLeft = 0;
+			}
+			if(barLeft > me.el.width() - me.bar.width()) {
+				barLeft = me.el.width() - me.bar.width()
+			}
+			
+			me.bar[0].style.left = barLeft;
+		}
+		
+		if(barTop != undefined && me.type == 'v') {
+			if(barTop < 0) {
+				barTop = 0;
+			}
+			if(barTop > me.el.height() - me.bar.height()) {
+				barTop = me.el.height() - me.bar.height()
+			}
+			
+			me.bar[0].style.top = barTop;
+		}
+		
+		this.fireEvent('drag', barLeft, barTop);
+	},
+	scrollTop: function(top) {
+		this.drag(undefined, top);
+	},
+	scrollLeft: function(left) {
+		this.drag(left);
+	},
+	isParent: function(a, b) {
+		while((a = a.parentNode) && a.nodeName != 'HTML') {
+			if(a == b) {
+				return true
+			}
+		}
+		return false;
 	}
 
 });
