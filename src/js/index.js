@@ -110,7 +110,7 @@ setTimeout(function() {
 		];
 		
 		table.initTable();
-		table.load('data.json');
+		//table.load('data.json');
 	});
 	
 
