@@ -3,6 +3,12 @@
 		
 		<link type="text/css" rel="stylesheet" href=src/css/table.css />
 		
+		<style>
+			table tr td {
+				border: 1px #ccc solid;
+			}
+		</style>
+		
 		<!--
 		<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script> 
 		-->
@@ -61,8 +67,8 @@
 
 					<div class="unlocked-columns" >
 						<table class="columns-title" border="0" cellspacing="0" cellpadding="0">
-						  <tr>
-							<td ng-repeat="col in unlockedColumnsTitles">
+						  <tr ng-repeat="row in columnsMultiHead">
+							<td ng-repeat="col in row" colspan="{{col.allLeafLength}}" rowspan="{{col.rowspan}}">
 								<div class="table-cell">
 									{{col.header}}
 									<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
@@ -72,7 +78,7 @@
 						</table>
 						<table class="columns-content" border="0" cellspacing="0" cellpadding="0">
 						  <tr ng-repeat="(rowIndex, row) in data">
-							<td ng-repeat="(colIndex, col) in unlockedColumnsTitles" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
+							<td ng-repeat="(colIndex, col) in columnsMultiHeadList" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
 								<!--
 								{{row[col.dataIndex]}}
 								-->

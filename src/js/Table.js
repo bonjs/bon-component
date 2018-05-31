@@ -89,10 +89,137 @@ var Table = extend(ComponentAngular, {
 		
 		this.initEvent();
 		
-		this.initTable();
+		this.initTitle();
 		
-	
+		this.initTable();
 	},
+	
+	
+	initTitle: function() {
+		
+		var me = this;
+		var columnsMultiHead = [];		// 多级表头
+		var columnsMultiHeadList = [];	// 多级表头实际的列(真正显示数据的列,为多级表头的叶子节点)
+		
+		
+		// 获取多级表头层级数
+		var maxDepth = function() {
+			var maxDepth = 1;
+			function getDepth(col, depath) {
+				if(col.columns) {
+					maxDepth ++;
+					col.columns.forEach(function(c) {
+						getDepth(c);
+					});
+				}
+			}
+			me.columns.forEach(function(col) {
+				getDepth(col, maxDepth);
+			});
+			
+			return maxDepth;
+		}();
+		
+		
+		// 设置节点的depth, parent操作
+		function initCol(col, level) {
+		
+			col.allLeafLength = Column.prototype.getAllLeafLength.call(col);
+			col.depth = level;
+			
+			if(!columnsMultiHead[level - 1]) {
+				columnsMultiHead[level - 1] = [];
+			}
+			columnsMultiHead[level - 1].push(col);
+		
+			level ++;
+			
+			if(col.columns) {
+				col.columns.forEach(function(it) {
+					it.parent = col;
+					initCol(it, level);
+				});
+				
+			} else {
+				columnsMultiHeadList.push(col);
+				/**
+					叶子节点的rowspan = maxDepth - depth + 1;
+					叶子节点的所有父节点rowspan都为1
+				*/
+				col.rowspan = maxDepth - col.depth + 1;
+				Column.prototype.setParentRowspan.call(col);
+			}
+		}
+	
+		this.columns.forEach(function(col) {
+			
+			initCol(col, 1);
+		});
+		
+		//console.log(arr);
+		//this.columns 原始列配置
+		
+		this.columnsMultiHead = this.scope.columnsMultiHead = columnsMultiHead;
+		this.columnsMultiHeadList = this.scope.columnsMultiHeadList = columnsMultiHeadList;
+		
+	},
+	
+	initTable : function () {
+		var me = this;
+		
+		this.scope.data = this.data;
+		this.scope.pageNo = this.pageNo;
+		
+		/*
+		this.columns = this.columns.reduce(function (arr, it) {
+			var col = new Column({
+				grid : me,
+				type : it.type || 'data',
+				header : it.header,
+				dataIndex : it.dataIndex,
+				locked : it.locked,
+				sortable : it.sortable,
+				scope : me.scope,
+				onRender: it.onRender
+			});
+			arr.push(col);
+			return arr;
+		}, []);
+		*/
+		
+		// 锁定列的表头
+		this.scope.lockedColumnsMultiHeadList = this.columnsMultiHeadList.filter(function (it) {
+			return it.locked === true;
+		});
+		
+		// 非锁定列的表头
+		this.scope.unlockedColumnsTitlesMultiHead = this.columnsMultiHeadList.filter(function (it) {
+			return it.locked !== true;
+		});
+		
+		
+		
+		
+		this.scope.pageNos = function() {
+			var arr = [];
+			
+			if(me.pageNo <= 3) {
+				arr.push.apply(arr, [1, 2, 3, 4, 5]);
+			} else {
+				arr.push(me.pageNo - 2);
+				arr.push(me.pageNo - 1);
+				arr.push(me.pageNo);
+				arr.push(me.pageNo + 1);
+				arr.push(me.pageNo + 2);
+			}
+			return arr;
+		}();
+		
+		this.scope.$apply();
+		
+		this.initSize();
+	},
+	
 	initTemplate: function() {
 		
 		var me = this;
@@ -191,39 +318,7 @@ var Table = extend(ComponentAngular, {
 				}
 				
 			});
-			
-			
-			return;
-				var contentHeight = $('.unlocked-columns .columns-content tbody').height();
-				var bodyHeight = $('.columns-content', me.el).height();
-				debugger
-				var scrollBarHeight = bodyHeight * bodyHeight / contentHeight;
-				
-				$('.scroll-bar-y div', me.el).height(scrollBarHeight);
 		});
-		/*
-		this.scope.$on('tableColsRepeatFinished', function (ngRepeatFinishedEvent) {
-			console.log('cols load')
-			debugger;
-			//me.initSize();
-		});
-		*/
-		
-		
-		
-		
-		angular.element(window).bind('load', function() {  
-			console.log('ok')
-		});
-		
-
-		
-		
-		
-		
-		
-		
-		
 		
 		// 处理滚动条
 		$('.table-body', this.el).on('wheel', function(e){
@@ -248,55 +343,7 @@ var Table = extend(ComponentAngular, {
 			return false;
 		});
 	},
-	initTable : function () {
-		var me = this;
-		
-		this.scope.data = this.data;
-		this.scope.pageNo = this.pageNo;
-		
-		this.columns = this.columns.reduce(function (arr, it) {
-			var col = new Column({
-				grid : me,
-				type : it.type || 'data',
-				header : it.header,
-				dataIndex : it.dataIndex,
-				locked : it.locked,
-				sortable : it.sortable,
-				scope : me.scope,
-				onRender: it.onRender
-			});
-			arr.push(col);
-			return arr;
-		}, []);
-
-		
-		this.scope.lockedColumnsTitles = this.columns.filter(function (it) {
-			return it.locked === true;
-		});
-
-		this.scope.unlockedColumnsTitles = this.columns.filter(function (it) {
-			return it.locked !== true;
-		});
-		
-		this.scope.pageNos = function() {
-			var arr = [];
-			
-			if(me.pageNo <= 3) {
-				arr.push.apply(arr, [1, 2, 3, 4, 5]);
-			} else {
-				arr.push(me.pageNo - 2);
-				arr.push(me.pageNo - 1);
-				arr.push(me.pageNo);
-				arr.push(me.pageNo + 1);
-				arr.push(me.pageNo + 2);
-			}
-			return arr;
-		}();
-		
-		this.scope.$apply();
-		
-		this.initSize();
-	},
+	
 	
 	// 初始化size(加载数据前)
 	/**
@@ -495,7 +542,34 @@ var Column = extend(Component, {
 		this.super(arguments);
 
 		var me = this;
+	},
+	
+	getAllLeafLength : function() {
+		var meFn = arguments.callee;
+		var me = this;
+		//this.allLeafLength = this.allLeafLength || 0;
+		this.allLeafLength = 0;
+		if(this.columns) {
+			this.columns.forEach(function(c, i) {
+				me.allLeafLength += meFn.call(c);
+			});
+			return this.allLeafLength;
+		} else {
+			return this.allLeafLength = 1;
+		}
+	},
+	
+	setParentRowspan : function() {
+		
+		var c = this;
+		
+		if(!c.columns) {
+			while(c = c.parent) {
+				c.rowspan = 1;
+			}
+		}
 	}
+	
 
 });
 

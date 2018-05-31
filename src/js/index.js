@@ -39,44 +39,23 @@ setTimeout(function() {
 			}
 		},
 		columns : [{
-				type : 'checkbox',
-				dataIndex : 'id',
-				locked : true,
-			}, {
 				header : '编号',
 				dataIndex : 'id',
-				sortable : true,
-				locked : true,
 			}, {
-				header : '姓名',
-				dataIndex : 'name',
-				sortable : true,
-				locked : true,
+				header : '人员信息',
+				columns: [
+					{
+						header : '姓名',
+						dataIndex : 'name',
+					}, {
+						header : '性别',
+						dataIndex : 'sex'
+					}
+				]
 			
 			}, {
 				header : '语文',
-				sortable : true,
 				dataIndex : 'chinese'
-			}, {
-				header : '数学',
-				sortable : true,
-				dataIndex : 'math'
-			}, {
-				header : '英语',
-				sortable : true,
-				dataIndex : 'english'
-			}, {
-				header : '物理',
-				sortable : true,
-				dataIndex : 'physics'
-			}, {
-				header : '生物',
-				sortable : true,
-				dataIndex : 'biology'
-			}, {
-				header : '化学',
-				sortable : true,
-				dataIndex : 'chemistry'
 			}
 		],
 	});
