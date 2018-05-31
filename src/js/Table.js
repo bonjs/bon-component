@@ -141,7 +141,17 @@ var Table = extend(ComponentAngular, {
 				});
 				
 			} else {
-				columnsMultiHeadList.push(col);
+				columnsMultiHeadList.push({
+					grid : me,
+					type : col.type || 'data',
+					header : col.header,
+					dataIndex : col.dataIndex,
+					locked : col.locked,
+					sortable : col.sortable,
+					scope : me.scope,
+					onRender: col.onRender
+
+				});
 				/**
 					叶子节点的rowspan = maxDepth - depth + 1;
 					叶子节点的所有父节点rowspan都为1
