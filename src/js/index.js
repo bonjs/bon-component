@@ -41,6 +41,7 @@ setTimeout(function() {
 		columns : [{
 				header : '编号',
 				dataIndex : 'id',
+				locked : true,
 			}, {
 				header : '人员信息',
 				columns: [
@@ -77,6 +78,14 @@ setTimeout(function() {
 				sortable : true,
 				dataIndex : 'chinese'
 			
+			}, {
+				header : '生物',
+				sortable : true,
+				dataIndex : 'biology'
+			}, {
+				header : '化学',
+				sortable : true,
+				dataIndex : 'chemistry'
 			}, {
 				header : '生物',
 				sortable : true,

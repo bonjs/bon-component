@@ -197,15 +197,29 @@ var Table = extend(ComponentAngular, {
 		}, []);
 		*/
 		
+		debugger;
+		// 锁定列的表头
+		this.scope.lockedColumnsMultiHead = this.columnsMultiHead.filter(function (it) {
+			return it.locked === true;
+		});
+		
+		console.log(this.scope.lockedColumnsMultiHead)
+		
 		// 锁定列的表头
 		this.scope.lockedColumnsMultiHeadList = this.columnsMultiHeadList.filter(function (it) {
 			return it.locked === true;
 		});
 		
+		
 		// 非锁定列的表头
-		this.scope.unlockedColumnsTitlesMultiHead = this.columnsMultiHeadList.filter(function (it) {
+		this.scope.unlockedColumnsTitlesMultiHead = this.columnsMultiHead.filter(function (it) {
 			return it.locked !== true;
 		});
+		// 非锁定列的表头
+		this.scope.unlockedColumnsTitlesMultiHeadList = this.columnsMultiHeadList.filter(function (it) {
+			return it.locked !== true;
+		});
+		
 		
 		
 		

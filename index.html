@@ -40,10 +40,10 @@
 			<div class="component-table">
 				<div class="table-body">
 					<div class="locked-columns">
-						<table class="columns-title" border="0" cellspacing="0" cellpadding="0" >
-						  <tr>
+						<table class="columns-title" border="0" cellspacing="0" cellpadding="0"  style="border: 1px red solid">
+						  <tr ng-repeat="row in lockedColumnsMultiHead">
 							<td ng-if="isShowRowNo" class="row-no"><div class="table-cell"></div></td>
-							<td ng-repeat="col in lockedColumnsTitles" col-type="{{col.type}}" >
+							<td ng-repeat="col in row" col-type="{{col.type}}" >
 								<div class="table-cell">
 									{{col.header}}
 									<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
@@ -53,7 +53,7 @@
 						  </tr>
 						</table>
 						<table class="columns-content" border="0" cellspacing="0" cellpadding="0">
-						  <tr ng-repeat="(rowIndex, row) in data" table-rows-repeat-finished>
+						  <tr ng-repeat="(rowIndex, row) in unlockedColumnsTitlesMultiHead" table-rows-repeat-finished>
 							<td ng-if="isShowRowNo" class="row-no"><div class="table-cell">{{rowIndex + 1}}</td>
 							<td ng-repeat="(colIndex, col) in lockedColumnsTitles " col-type="{{col.type}}" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
 								<!--
