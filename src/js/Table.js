@@ -320,7 +320,6 @@ var Table = extend(ComponentAngular, {
 				dependEl: $('.columns-content tbody', me.el),
 				listeners: {
 					drag: function(barLeft, barTop) {
-						debugger
 						var contentTop = barTop / this.rateHeight;
 						$('.columns-content', me.el).scrollTop(contentTop);
 					}
@@ -335,7 +334,6 @@ var Table = extend(ComponentAngular, {
 				type: 'h',
 				listeners: {
 					drag: function(barLeft, barTop) {
-						debugger
 						var contentLeft = barLeft / this.rateWidth;
 						$(".unlocked-columns .columns-title, .unlocked-columns .columns-content", me.el).scrollLeft(contentLeft);
 					}
