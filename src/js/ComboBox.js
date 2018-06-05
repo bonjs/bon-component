@@ -1,6 +1,5 @@
 
 
-var component;
 
 app.directive('comboBoxRowsRepeatFinished', function ($timeout) {
     return {
@@ -17,47 +16,6 @@ app.directive('comboBoxRowsRepeatFinished', function ($timeout) {
 
 
 
-
-app.directive("component", ["$compile", function ($compile) {
-		return {
-			replace : true,
-			restrict : 'EA',
-			link : function (scope, element, attr) {
-				
-				attr.$observe("html", function (html) {
-					
-					html = html || '';
-					
-					var componentScope = scope.$new(false);
-					var content = $compile(html)(componentScope);
-					
-					element.replaceWith(content);
-					element = content;
-					
-					componentScope.component.name = 'dfasfd'
-					
-					component.scope = componentScope;
-					
-					component.fireEvent('initScope', componentScope);
-
-				});
-				
-			}
-		};
-	}
-]);
-
-app.controller("ComponentController", ['$scope', function (scope) {
-	console.log(scope)
-	
-	component.a = scope;
-	
-	this.template = component.template;
-}]);
-
-
-
-
 var ComboBox = extend(ComponentAngular, {
 	
 	valueField: 'value',	// 值字段
@@ -65,8 +23,7 @@ var ComboBox = extend(ComponentAngular, {
 	
 	
 	data: [],
-	name: '我是名',
-	template: '<button>{{component.name}}</button>',
+	template: '<button>{{name}}</button>',
 	constructor : function () {
 
 		this.super(arguments);
@@ -76,11 +33,8 @@ var ComboBox = extend(ComponentAngular, {
 		
 		this.initTemplate();
 		
-		// 获取scope后调用
-		this.on('initScope', function() {
-			this.initEvent();
-			this.initComboBox();
-		});
+		this.initEvent();
+		this.initComboBox();
 	},
 	
 	initComboBox : function () {
@@ -94,19 +48,17 @@ var ComboBox = extend(ComponentAngular, {
 		
 		var me = this;
 		
-		var directiveHTML = [
-			'<div ng-controller="ComponentController as component">',
-				'<component html="{{component.template}}"></component>',
-			'</div>'
-		].join('');
 		
 		//通过$compile动态编译html
-		var template = angular.element(directiveHTML);
+		var template = angular.element(this.template);
 		
-		var element = globalCompile(template)(globalScope);
+		
+		var scope = this.scope = globalScope.$new(false);
+		
+		var element = globalCompile(template)(scope);
 		
 		var el = this.el = element[0];
-		
+	
 		
 		if(this.renderTo instanceof jQuery) {
 			this.renderTo = this.renderTo[0];
@@ -121,6 +73,7 @@ var ComboBox = extend(ComponentAngular, {
 		debugger
 		el.style.height = this.height;
 		el.style.width = this.width;
+		
 	},
 	initEvent: function() {
 		
