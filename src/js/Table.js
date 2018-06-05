@@ -1,7 +1,7 @@
 
 
 
-define(['Component', 'ComponentAngular', 'extend'], function(Component, ComponentAngular, extend) {
+define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Component, ComponentAngular, extend) {
 		
 
 	
@@ -721,7 +721,7 @@ define(['Component', 'ComponentAngular', 'extend'], function(Component, Componen
 
 	});
 
-
+	debugger
 	return Table;
 	
 });

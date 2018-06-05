@@ -1,7 +1,7 @@
 
 
 
-define(['Component', 'extend'], function(Component, extend) {
+define(['app', 'Component', 'extend'], function(app, Component, extend) {
 	
 	app.directive("compileBindExpn", function ($compile) {
 		console.log('a')

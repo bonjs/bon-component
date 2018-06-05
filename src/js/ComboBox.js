@@ -1,5 +1,5 @@
 
-define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
+define(['app', 'ComponentAngular', 'extend'], function(app, ComponentAngular, extend) {
 	
 
 	var ComboBox = extend(ComponentAngular, {
