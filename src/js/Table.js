@@ -309,9 +309,7 @@ define(['Component', 'ComponentAngular', 'extend'], function(Component, Componen
 			 * colIndex: 当前列下标
 			 */
 			 
-			console.log(scope)
 			scope.renderTpl = function(v, row, col, rowIndex, colIndex) {
-				console.log('ok')
 				var defaultColHtml = [
 					//'{{col.type == "data" ? row[col.dataIndex] : ""}}',
 					col.type == "data" ? row[col.dataIndex] : "",

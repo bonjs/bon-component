@@ -67,11 +67,10 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 			scope.isExpand = false;
 			
 			
-			scope.searchField = '';
+			//scope.searchField = '';
 			scope.$watch('searchField', function(a, b) {
-				console.log(a,b);
 				if(scope.searchField === '') {
-					return;
+					//return;
 				}
 				scope.listData = me.data.filter(function(it, i) {
 					var match = (it.value + '').indexOf(scope.searchField) >= 0;
@@ -129,6 +128,7 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 		},
 		clear: function() {
 			this.scope.currentItem = null;
+			this.scope.searchField = '';
 		},
 		
 		clickItem: function(item) {
