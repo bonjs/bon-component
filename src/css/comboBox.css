@@ -1,0 +1,133 @@
+
+.component-combobox {
+	width: 200px;
+	position: relative;
+	border: 1px #b2cf07 solid;
+	
+	border-radius: 3px;
+}
+
+.combobox-textfield {
+	width: calc(100% - 18px);
+	padding: 5px 20px 5px 5px;
+	border: 0px;
+	border-right: 1px #b2cf07 solid;
+	outline:none;
+	cursor: pointer;
+}
+.combobox-drop-icon {
+	
+	width: 11px;
+	position: absolute;
+	right: 23px;
+	height: 11px;
+	top: 7px;
+	cursor: pointer;
+}
+
+.combobox-drop-icon:before,.combobox-drop-icon:after {
+	content: '';
+	transform: rotate(-45deg);
+	position: absolute;
+	top: 5px;
+	width: 5px;
+	border: 1px #999 solid;
+}
+
+.combobox-drop-icon:before {
+	transform: rotate(-45deg);
+	left: 4px;
+}
+.combobox-drop-icon:after {
+	transform: rotate(45deg);
+	left: 0px;
+}
+
+
+.combobox-textfield-icon {
+	width: 11px;
+	position: absolute;
+	right: 7px;
+	height: 11px;
+	top: 0px;
+	cursor: pointer;
+}
+.combobox-textfield-icon:before, .combobox-textfield-icon:after {
+	content: '';
+	position: absolute;
+	left: 5px;
+	top: 12px;
+	width: 8px;
+	border: 1px #999 solid;
+}
+.combobox-textfield-icon:before {
+	transform: rotate(-45deg);
+}
+.combobox-textfield-icon:after {
+	transform: rotate(45deg);
+}
+
+
+
+.combobox-expand {
+	border: 1px #bbb solid;
+	position: absolute;
+	width: 100%;
+	top: 36px;
+	border-radius: 3px;
+	background: #343536;
+	color: #939393;
+}
+.combobox-expand:before {
+	content: '';
+	position: absolute;
+	height:6px;
+	right: 19px;
+	top: -10px;
+	
+	border-left: 5px solid transparent;
+	border-bottom: 5px solid #343536;
+	border-right: 5px solid transparent
+	
+}
+.combobox-expand-body {
+	overflow: auto;
+	max-height: 150px;
+	padding: 3px;
+}
+
+.combobox-expand-body ul  {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.combobox-expand-body ul li {
+	list-style: none;
+	padding-left: 8px;
+	margin: 3px;
+	cursor: pointer;
+}
+.combobox-expand-head {
+	padding: 3px;
+	
+}
+.combobox-expand-search {
+	width: 100%;
+	width: calc(100% - 18px);
+	outline:none;
+	position: relative;
+	
+	background: #343536;
+	color: #939393;
+	
+	border: 2px #777 solid;
+}
+.combobox-expand-search-icon {
+	width: 16px;
+	height: 19px;
+	border: 1px red solid;
+	position: absolute;
+}
+.active {
+	color: #b2cf07;
+}

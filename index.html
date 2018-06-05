@@ -16,17 +16,8 @@
 		<script src="http://cdn.bootcss.com/jquery/1.12.1/jquery.js"></script>
 		<script src="https://cdn.bootcss.com/require.js/2.3.5/require.js"></script>
 		<script src="src/js/angular.js"></script>
+		<script src="/context/context.js"></script>
 		
-		<script>
-		
-			var pt = {};
-			var app = angular.module("app", []);
-			app.controller('main', ['$scope', '$compile', function ($scope, $compile) {
-					pt.scope = $scope;
-					pt.compile = $compile;
-				}
-			]);
-		</script>
 	
 		
 		<!--
@@ -39,13 +30,7 @@
 		-->
 		
 		<script src="src/js/index.js" charset=utf-8></script>
-		<script>
-			require.config({
-				baseUrl : "src/js/"
-			})
-			
-		</script>
-		
+	
 		
 	</head>
 	<body ng-controller="main">
