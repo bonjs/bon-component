@@ -1,36 +1,6 @@
 
 
 
-var tmpScope;
-
-var comboBoxComponentDirective = function () {
-	return {
-		require : '?ngModel',
-		restrict : 'E',
-		transclude : true,
-		replace : true,
-		scope : true,
-		template : template.innerHTML,
-		link : function (scope, element, attrs, controller, i) {
-			tmpScope = scope;
-		}
-	};
-};
-app.directive('comboBoxComponent', comboBoxComponentDirective);
-
-
-app.directive('comboBoxRowsRepeatFinished', function ($timeout) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attr) {
-            if (scope.$last === true) {
-                $timeout(function() {
-                    scope.$emit('comboBoxRowsRepeatFinished');
-                });
-            }
-        }
-    };
-});
 
 
 
@@ -43,7 +13,28 @@ var ComboBox = extend(ComponentAngular, {
 	displayField: 'text',	// 显示字段
 	
 	data: [],
-	
+	template: `
+		<div class="component-combobox">
+			<input class="combobox-textfield" readonly ng-model="currentItem.text" />
+			<span class="combobox-drop-icon" ng-click="expand($event)"></span>
+			<span class="combobox-textfield-icon" ng-click="clear($event)"></span>
+			
+			<div class="combobox-expand" ng-show="isExpand">
+			
+				<div class="combobox-expand-head">
+					<input class="combobox-expand-search" ng-model="searchField" />
+					<span class="combobox-expand-search-icon"></span>
+				</div>
+				<div class="combobox-expand-body">
+					<ul>
+						<li ng-repeat="item in listData" 
+							ng-click="clickItem(item)" 
+							class="{{item.value == currentItem.value ? 'active' : ''}}" >{{item.text}}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	`,
 	constructor : function () {
 
 		this.super(arguments);
@@ -71,19 +62,16 @@ var ComboBox = extend(ComponentAngular, {
 		
 		var me = this;
 		
-		var directiveHTML = '<combo-box-component></combo-box-component>';
 		
 		//通过$compile动态编译html
-		var template = angular.element(directiveHTML);
+		var template = angular.element(this.template);
 		
-		var element = globalCompile(template)(globalScope);
+		var scope = this.scope = globalScope.$new(false);
+		
+		var element = globalCompile(template)(scope);
 		
 		var el = this.el = element[0];
-		
-		// 在此无法直接获取到自定义指令中的scope, 只能通过定义外变量的方式来传递
-		this.scope = tmpScope;
-		tmpScope = undefined;
-		
+	
 		
 		if(this.renderTo instanceof jQuery) {
 			this.renderTo = this.renderTo[0];
@@ -152,12 +140,7 @@ var ComboBox = extend(ComponentAngular, {
 		}
 		
 		scope.isShowRowNo = this.isShowRowNo;
-		
-		// 数据渲染完毕后设置Y滚动条的高度
-		this.scope.$on('tableRowsRepeatFinished', function (ngRepeatFinishedEvent) {
-			
-			
-		});
+	
 		
 	},
 	
