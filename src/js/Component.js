@@ -1,29 +1,35 @@
 
-// 组件
-var Component = extend(Observable, {
-	
-	constructor: function(config) {
+
+define(['Observable', 'extend'], function(Observable, extend) {
+	// 组件
+	var Component = extend(Observable, {
 		
-		this.super(arguments);
+		constructor: function(config) {
 			
-		//this.apply.call(config.listeners, this.listeners);
+			this.super(arguments);
+				
+			//this.apply.call(config.listeners, this.listeners);
+			
+			
+			if(this.listeners) {
+				this.on(this.listeners);
+			}
+			if(config.listeners) {
+				this.on(config.listeners);
+			}
+			
+			this.apply(config);
+			
+			
+			this.initComponent();
+		},
 		
-		
-		if(this.listeners) {
-			this.on(this.listeners);
+		initComponent: function() {
+			//console.log('initComponent')
 		}
-		if(config.listeners) {
-			this.on(config.listeners);
-		}
 		
-		this.apply(config);
-		
-		
-		this.initComponent();
-	},
+	});
 	
-	initComponent: function() {
-		//console.log('initComponent')
-	}
-	
-})
+	return Component;
+
+});
