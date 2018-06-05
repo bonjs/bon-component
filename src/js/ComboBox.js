@@ -7,6 +7,8 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 		valueField: 'value',	// 值字段
 		displayField: 'text',	// 显示字段
 		
+		isShowSearch: true,		// 是否显示搜索框
+		
 		data: [],
 		template: `
 			<div class="component-combobox">
@@ -16,7 +18,7 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 				
 				<div class="combobox-expand" ng-show="isExpand">
 				
-					<div class="combobox-expand-head">
+					<div class="combobox-expand-head" ng-show="isShowSearch">
 						<input class="combobox-expand-search" ng-model="searchField" />
 						<span class="combobox-expand-search-icon"></span>
 					</div>
@@ -66,6 +68,8 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 			scope.clear = this.clear.bind(this);
 			scope.isExpand = false;
 			
+			scope.isShowSearch = this.isShowSearch;
+			
 			
 			//scope.searchField = '';
 			scope.$watch('searchField', function(a, b) {
@@ -113,7 +117,6 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 			});
 			
 			$('.combobox-expand', this.el).on('click', function() {
-				
 				return false;
 			});
 		
