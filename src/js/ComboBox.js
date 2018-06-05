@@ -129,6 +129,7 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 		clear: function() {
 			this.scope.currentItem = null;
 			this.scope.searchField = '';
+			this.scope.isExpand = false;
 		},
 		
 		clickItem: function(item) {

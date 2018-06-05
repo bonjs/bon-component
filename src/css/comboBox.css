@@ -45,20 +45,20 @@
 
 
 .combobox-textfield-icon {
-	width: 11px;
-	position: absolute;
-	right: 7px;
-	height: 11px;
-	top: 0px;
-	cursor: pointer;
+    width: 11px;
+    position: absolute;
+    right: 7px;
+    height: 11px;
+    top: 7px;
+    cursor: pointer;
+    right: 3px;
 }
 .combobox-textfield-icon:before, .combobox-textfield-icon:after {
-	content: '';
-	position: absolute;
-	left: 5px;
-	top: 12px;
-	width: 8px;
-	border: 1px #999 solid;
+    content: '';
+    position: absolute;
+    top: 5px;
+    width: 8px;
+    border: 1px #999 solid;
 }
 .combobox-textfield-icon:before {
 	transform: rotate(-45deg);
@@ -107,6 +107,14 @@
 	margin: 3px;
 	cursor: pointer;
 }
+.combobox-expand-body ul li:hover {
+	list-style: none;
+	padding-left: 8px;
+	margin: 3px;
+	cursor: pointer;
+	background: #00000066;
+}
+
 .combobox-expand-head {
 	padding: 3px;
 	
