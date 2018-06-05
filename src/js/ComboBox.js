@@ -10,8 +10,8 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 		data: [],
 		template: `
 			<div class="component-combobox">
-				<input class="combobox-textfield" readonly ng-model="currentItem.text" ng-click="expandOrCollapse()" />
-				<span class="combobox-drop-icon" ng-click="expandOrCollapse()"></span>
+				<input class="combobox-textfield" readonly ng-model="currentItem.text" ng-click="expandOrCollapse($event)" />
+				<span class="combobox-drop-icon" ng-click="expandOrCollapse($event)"></span>
 				<span class="combobox-textfield-icon" ng-click="clear($event)"></span>
 				
 				<div class="combobox-expand" ng-show="isExpand">
@@ -105,11 +105,22 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 			}
 			
 			scope.isShowRowNo = this.isShowRowNo;
+			
+			
+			$(document).on('click', function() {
+				me.scope.isExpand = false;
+				me.scope.$apply();
+			});
+			
+			$('.combobox-expand', this.el).on('click', function() {
+				
+				return false;
+			});
 		
 			
 		},
 		
-		expandOrCollapse: function() {
+		expandOrCollapse: function(e) {
 			console.log('expandOrCollapse')
 			if(!this.scope.isExpand) {
 				if(this.fireEvent('expand') === false) {
@@ -122,6 +133,8 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 			}
 
 			this.scope.isExpand = !this.scope.isExpand;
+			
+			e.stopPropagation();
 		},
 		search: function() {
 			console.log('search')
