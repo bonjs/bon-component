@@ -37,11 +37,8 @@ app.directive('tableColsRepeatFinished', function ($timeout) {
 });
 
 app.directive("compileBindExpn", function ($compile) {
-	console.log('a')
 	return function linkFn(scope, elem, attrs) {
-		console.log('test')
 		scope.$watch("::" + attrs.compileBindExpn, function (html) {
-			console.log(html);
 			if (html && html.indexOf("<") != -1 && html.indexOf(">") != -1) {
 				var expnLinker = $compile(html);
 				expnLinker(scope, function transclude(clone) {
