@@ -10,8 +10,8 @@ define(['ComponentAngular', 'extend'], function(ComponentAngular, extend) {
 		data: [],
 		template: `
 			<div class="component-combobox">
-				<input class="combobox-textfield" readonly ng-model="currentItem.text" />
-				<span class="combobox-drop-icon" ng-click="expandOrCollapse($event)"></span>
+				<input class="combobox-textfield" readonly ng-model="currentItem.text" ng-click="expandOrCollapse()" />
+				<span class="combobox-drop-icon" ng-click="expandOrCollapse()"></span>
 				<span class="combobox-textfield-icon" ng-click="clear($event)"></span>
 				
 				<div class="combobox-expand" ng-show="isExpand">

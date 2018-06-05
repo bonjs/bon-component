@@ -15,21 +15,18 @@ require(['ComboBox'], function(ComboBox) {
 		return arr;
 	}();
 
-	setTimeout(function() {
 			
-		var comboBox = new ComboBox({
-			
-			renderTo: 'main',
-			
-			//width: 500,
-			//height: 300,
-			
-			
-			data2 : data
-		});
+	var comboBox = new ComboBox({
 		
-		debugger
-		comboBox.load(data)
-
+		renderTo: 'main',
+		
+		//width: 500,
+		//height: 300,
+		
+		data2 : data
 	});
+	
+	debugger
+	comboBox.load(data)
+
 });
