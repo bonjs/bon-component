@@ -23,7 +23,10 @@ setTimeout(function() {
 		//height: 300,
 		
 		
-		data2 : data
+		data2 : data,
+		listeners: {
+			
+		}
 	});
 	
 	debugger

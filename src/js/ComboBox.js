@@ -1,23 +1,6 @@
 
 
-
-var tmpScope;
-
-var comboBoxComponentDirective = function () {
-	return {
-		require : '?ngModel',
-		restrict : 'E',
-		transclude : true,
-		replace : true,
-		scope : true,
-		template : template.innerHTML,
-		link : function (scope, element, attrs, controller, i) {
-			tmpScope = scope;
-		}
-	};
-};
-app.directive('comboBoxComponent', comboBoxComponentDirective);
-
+var component;
 
 app.directive('comboBoxRowsRepeatFinished', function ($timeout) {
     return {
@@ -35,6 +18,44 @@ app.directive('comboBoxRowsRepeatFinished', function ($timeout) {
 
 
 
+app.directive("component", ["$compile", function ($compile) {
+		return {
+			replace : true,
+			restrict : 'EA',
+			link : function (scope, element, attr) {
+				
+				attr.$observe("html", function (html) {
+					
+					html = html || '';
+					
+					var componentScope = scope.$new(false);
+					var content = $compile(html)(componentScope);
+					
+					element.replaceWith(content);
+					element = content;
+					
+					componentScope.component.name = 'dfasfd'
+					
+					component.scope = componentScope;
+					
+					component.fireEvent('initScope', componentScope);
+
+				});
+				
+			}
+		};
+	}
+]);
+
+app.controller("ComponentController", ['$scope', function (scope) {
+	console.log(scope)
+	
+	component.a = scope;
+	
+	this.template = component.template;
+}]);
+
+
 
 
 var ComboBox = extend(ComponentAngular, {
@@ -42,23 +63,25 @@ var ComboBox = extend(ComponentAngular, {
 	valueField: 'value',	// 值字段
 	displayField: 'text',	// 显示字段
 	
-	data: [],
 	
+	data: [],
+	name: '我是名',
+	template: '<button>{{component.name}}</button>',
 	constructor : function () {
 
 		this.super(arguments);
 
 		var me = this;
+		component = this;
 		
 		this.initTemplate();
 		
-		this.initEvent();
-		
-		window.s = this.scope;
-		
-		this.initComboBox();
+		// 获取scope后调用
+		this.on('initScope', function() {
+			this.initEvent();
+			this.initComboBox();
+		});
 	},
-	
 	
 	initComboBox : function () {
 		var me = this;
@@ -71,7 +94,11 @@ var ComboBox = extend(ComponentAngular, {
 		
 		var me = this;
 		
-		var directiveHTML = '<combo-box-component></combo-box-component>';
+		var directiveHTML = [
+			'<div ng-controller="ComponentController as component">',
+				'<component html="{{component.template}}"></component>',
+			'</div>'
+		].join('');
 		
 		//通过$compile动态编译html
 		var template = angular.element(directiveHTML);
@@ -79,10 +106,6 @@ var ComboBox = extend(ComponentAngular, {
 		var element = globalCompile(template)(globalScope);
 		
 		var el = this.el = element[0];
-		
-		// 在此无法直接获取到自定义指令中的scope, 只能通过定义外变量的方式来传递
-		this.scope = tmpScope;
-		tmpScope = undefined;
 		
 		
 		if(this.renderTo instanceof jQuery) {
@@ -95,7 +118,7 @@ var ComboBox = extend(ComponentAngular, {
 		
 		angular.element(this.renderTo).append(element);
 		//$('.table-body', this.el).height(this.height - $('.table-footer', this.el).height());
-		
+		debugger
 		el.style.height = this.height;
 		el.style.width = this.width;
 	},
@@ -108,7 +131,7 @@ var ComboBox = extend(ComponentAngular, {
 
 		scope.clickItem = this.clickItem.bind(this);
 		
-		scope.expand = this.expand.bind(this);
+		scope.expandOrCollapse = this.expandOrCollapse.bind(this);
 		scope.clear = this.clear.bind(this);
 		scope.isExpand = false;
 		
@@ -161,8 +184,17 @@ var ComboBox = extend(ComponentAngular, {
 		
 	},
 	
-	expand: function() {
-		console.log('expand')
+	expandOrCollapse: function() {
+		
+		if(!this.scope.isExpand) {
+			if(this.fireEvent('expand') === false) {
+				return;
+			}
+		} else {
+			if(this.fireEvent('collapse') === false) {
+				return;
+			}
+		}
 		this.scope.isExpand = !this.scope.isExpand;
 	},
 	search: function() {
@@ -176,8 +208,9 @@ var ComboBox = extend(ComponentAngular, {
 		console.log(item);
 		this.scope.isExpand = false;
 		this.scope.currentItem = this.currentItem = item;
-		
 	},
+	
+	
 	getValue: function() {
 		return this.currentItem.value;
 	},
