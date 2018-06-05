@@ -1,7 +1,8 @@
 
 
-setTimeout(function() {
-		
+require(['Table'], function(Table) {
+	
+	
 	var table = new Table({
 		
 		renderTo: 'main',

@@ -12,102 +12,39 @@
 		<!--
 		<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script> 
 		-->
+		
+		<script src="http://cdn.bootcss.com/jquery/1.12.1/jquery.js"></script>
+		<script src="https://cdn.bootcss.com/require.js/2.3.5/require.js"></script>
 		<script src="src/js/angular.js"></script>
+		
 		<script>
 		
+			var pt = {};
 			var app = angular.module("app", []);
-
 			app.controller('main', ['$scope', '$compile', function ($scope, $compile) {
-				
-					window.s = window.globalScope = $scope;
-					window.c = window.globalCompile = $compile;
+					pt.scope = $scope;
+					pt.compile = $compile;
 				}
 			]);
 		</script>
 	
-		<script src="http://cdn.bootcss.com/jquery/1.12.1/jquery.js"></script>
 		
+		<!--
 		<script src="src/js/Extend.js"></script>
 		<script src="src/js/Observable.js"></script>
 		<script src="src/js/Component.js"></script>
 		<script src="src/js/ComponentAngular.js"></script>
 		
-		
-		
-		
-		<script type="html" id="template">
-			<div class="component-table">
-				<div class="table-body">
-					<div class="locked-columns">
-						<table class="columns-title" border="0" cellspacing="0" cellpadding="0"  style="border: 1px red solid">
-						  <tr ng-repeat="row in lockedColumnsMultiHead">
-							<td ng-if="isShowRowNo" class="row-no"><div class="table-cell"></div></td>
-							<td ng-repeat="col in row" col-type="{{col.type}}" >
-								<div class="table-cell">
-									{{col.header}}
-									<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
-									<input ng-if="col.type == 'checkbox'" type="checkbox"  ng-checked="col.isCheckAll" ng-click="checkAll($event, col)" />
-								</div>
-							</td>
-						  </tr>
-						</table>
-						<table class="columns-content" border="0" cellspacing="0" cellpadding="0">
-						  <tr ng-repeat="(rowIndex, row) in unlockedColumnsTitlesMultiHead" table-rows-repeat-finished>
-							<td ng-if="isShowRowNo" class="row-no"><div class="table-cell">{{rowIndex + 1}}</td>
-							<td ng-repeat="(colIndex, col) in lockedColumnsTitles " col-type="{{col.type}}" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
-								<!--
-								{{col.type == 'data' ? row[col.dataIndex] : ""}}
-								<input ng-if="col.type != 'data'" type="{{col.type}}" ng-checked="row.isChecked" ng-click="checkItem($event, row, rowIndex, col)"/>
-								-->
-							</td>
-						  </tr> 
-						</table>
-					</div>
-
-					<div class="unlocked-columns" >
-						<table class="columns-title" border="0" cellspacing="0" cellpadding="0">
-						  <tr ng-repeat="row in columnsMultiHead">
-							<td ng-repeat="col in row" colspan="{{col.allLeafLength}}" rowspan="{{col.rowspan}}">
-								<div class="table-cell">
-									{{col.header}}
-									<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
-								</div>
-							</td>
-						  </tr>
-						</table>
-						<table class="columns-content" border="0" cellspacing="0" cellpadding="0">
-						  <tr ng-repeat="(rowIndex, row) in data">
-							<td ng-repeat="(colIndex, col) in columnsMultiHeadList" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
-								<!--
-								{{row[col.dataIndex]}}
-								-->
-							</td>
-						  </tr>      
-						</table>
-						<div class="scroll-bar-y">
-							<div></div>
-						</div>
-						<div class="scroll-bar-x">
-							<div></div>
-						</div>
-					</div>
-					<div style="clear:both;"></div>
-				</div>
-				<div class="table-footer">
-					<li class="prev page-button" ng-click="prev()"></li>
-					<li ng-repeat="no in pageNos" class="page-no {{pageNo == no ? 'current-page' : ''}}" ng-click="pageGo(no)">{{no}}</li>
-					
-					<li class="next page-button" ng-click="next()"></li>
-				</div>
-			</div>
-		</script>
-		
-		
-		
 		<script src="src/js/Table.js"></script>
+		-->
 		
 		<script src="src/js/index.js" charset=utf-8></script>
-		
+		<script>
+			require.config({
+				baseUrl : "src/js/"
+			})
+			
+		</script>
 		
 		
 	</head>
