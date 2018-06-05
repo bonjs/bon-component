@@ -1,23 +1,6 @@
 
 
 
-var tmpScope;
-
-var tableComponentDirective = function () {
-	return {
-		require : '?ngModel',
-		restrict : 'E',
-		transclude : true,
-		replace : true,
-		scope : true,
-		template : template.innerHTML,
-		link : function (scope, element, attrs, controller, i) {
-			tmpScope = scope;
-		}
-	};
-};
-app.directive('tableComponent', tableComponentDirective);
-
 
 app.directive('tableRowsRepeatFinished', function ($timeout) {
     return {
@@ -54,6 +37,8 @@ var Table = extend(ComponentAngular, {
 	
 	data: [],
 	
+	template: document.getElementById('template').innerHTML,
+	
 	isShowRowNo: true,	// 是否显示行号
 	
 	pageNo: 1,
@@ -68,7 +53,8 @@ var Table = extend(ComponentAngular, {
 
 		var me = this;
 		
-		this.initTemplate();
+		
+		$('.table-body', this.el).height(this.height - $('.table-footer', this.el).height());
 		
 		this.initEvent();
 		
@@ -227,38 +213,7 @@ var Table = extend(ComponentAngular, {
 		this.initSize();
 	},
 	
-	initTemplate: function() {
-		
-		var me = this;
-		
-		var directiveHTML = '<table-component></table-component>';
-		
-		//通过$compile动态编译html
-		var template = angular.element(directiveHTML);
-		
-		var element = globalCompile(template)(globalScope);
-		
-		var el = this.el = element[0];
-		
-		// 在此无法直接获取到自定义指令中的scope, 只能通过定义外变量的方式来传递
-		this.scope = tmpScope;
-		tmpScope = undefined;
-		
-		
-		if(this.renderTo instanceof jQuery) {
-			this.renderTo = this.renderTo[0];
-		} else if(this.renderTo instanceof HTMLElement) {
-			this.renderTo = this.renderTo;
-		} else if(typeof this.renderTo == 'string') {
-			this.renderTo = document.getElementById(this.renderTo);
-		}
-		
-		angular.element(this.renderTo).append(element);
-		$('.table-body', this.el).height(this.height - $('.table-footer', this.el).height());
-		
-		el.style.height = this.height;
-		el.style.width = this.width;
-	},
+	
 	initEvent: function() {
 		
 		var me = this;

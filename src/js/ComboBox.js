@@ -1,12 +1,6 @@
 
 
 
-
-
-
-
-
-
 var ComboBox = extend(ComponentAngular, {
 	
 	valueField: 'value',	// 值字段
@@ -16,7 +10,7 @@ var ComboBox = extend(ComponentAngular, {
 	template: `
 		<div class="component-combobox">
 			<input class="combobox-textfield" readonly ng-model="currentItem.text" />
-			<span class="combobox-drop-icon" ng-click="expand($event)"></span>
+			<span class="combobox-drop-icon" ng-click="expandOrCollapse($event)"></span>
 			<span class="combobox-textfield-icon" ng-click="clear($event)"></span>
 			
 			<div class="combobox-expand" ng-show="isExpand">
@@ -41,7 +35,6 @@ var ComboBox = extend(ComponentAngular, {
 
 		var me = this;
 		
-		this.initTemplate();
 		
 		this.initEvent();
 		
@@ -58,35 +51,7 @@ var ComboBox = extend(ComponentAngular, {
 		this.scope.$apply();
 	},
 	
-	initTemplate: function() {
-		
-		var me = this;
-		
-		
-		//通过$compile动态编译html
-		var template = angular.element(this.template);
-		
-		var scope = this.scope = globalScope.$new(false);
-		
-		var element = globalCompile(template)(scope);
-		
-		var el = this.el = element[0];
 	
-		
-		if(this.renderTo instanceof jQuery) {
-			this.renderTo = this.renderTo[0];
-		} else if(this.renderTo instanceof HTMLElement) {
-			this.renderTo = this.renderTo;
-		} else if(typeof this.renderTo == 'string') {
-			this.renderTo = document.getElementById(this.renderTo);
-		}
-		
-		angular.element(this.renderTo).append(element);
-		//$('.table-body', this.el).height(this.height - $('.table-footer', this.el).height());
-		
-		el.style.height = this.height;
-		el.style.width = this.width;
-	},
 	initEvent: function() {
 		
 		var me = this;
@@ -96,7 +61,7 @@ var ComboBox = extend(ComponentAngular, {
 
 		scope.clickItem = this.clickItem.bind(this);
 		
-		scope.expand = this.expand.bind(this);
+		scope.expandOrCollapse = this.expandOrCollapse.bind(this);
 		scope.clear = this.clear.bind(this);
 		scope.isExpand = false;
 		
@@ -144,8 +109,18 @@ var ComboBox = extend(ComponentAngular, {
 		
 	},
 	
-	expand: function() {
-		console.log('expand')
+	expandOrCollapse: function() {
+		console.log('expandOrCollapse')
+		if(!this.scope.isExpand) {
+			if(this.fireEvent('expand') === false) {
+				return;
+			}
+		} else {
+			if(this.fireEvent('collapse') === false) {
+				return;
+			}
+		}
+
 		this.scope.isExpand = !this.scope.isExpand;
 	},
 	search: function() {
