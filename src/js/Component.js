@@ -10,7 +10,8 @@ define(['Observable', 'extend'], function(Observable, extend) {
 				
 			//this.apply.call(config.listeners, this.listeners);
 			
-			
+			config = config || {};
+
 			if(this.listeners) {
 				this.on(this.listeners);
 			}
