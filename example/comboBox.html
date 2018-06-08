@@ -1,0 +1,55 @@
+<html ng-app="app" >
+	<head>
+		
+		<link type="text/css" rel="stylesheet" href=../src/css/comboBox.css />
+		
+		<script src="https://cdn.bootcss.com/angular.js/1.4.6/angular.min.js"></script>
+		
+		<script src="https://cdn.bootcss.com/jquery/1.12.1/jquery.js"></script>
+		<script src="https://cdn.bootcss.com/require.js/2.3.5/require.js"></script>
+	
+		<!--
+		<script src="../src/js/angular.js"></script>
+		-->
+		<script src="../context.js"></script>
+		
+		
+		<script>
+			require(['ComboBox'], function(ComboBox) {
+				
+				var data = function () {
+					var arr = [];
+
+					for (var i = 0; i < 20; i++) {
+						arr.push({
+							value : i + 1,
+							text : 'sun' + (i + 1),
+						});
+					}
+					return arr;
+				}();
+
+						
+				var comboBox = new ComboBox({
+					
+					renderTo: 'main',
+					
+					//width: 500,
+					//height: 300,
+					
+					data2 : data
+				});
+				
+				debugger
+				comboBox.load(data)
+
+			});
+		</script>
+		
+		
+		
+	</head>
+	<body ng-controller="main">
+		<div id=main></div>
+	</body> 
+</html>

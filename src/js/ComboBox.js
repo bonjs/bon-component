@@ -25,7 +25,7 @@ define(['app', 'ComponentAngular', 'extend'], function(app, ComponentAngular, ex
 					<div class="combobox-expand-body">
 						<ul>
 							<li ng-repeat="item in listData" 
-								ng-click="clickItem(item)" 
+								ng-click="clickItem($event, item)" 
 								class="{{item.value == currentItem.value ? 'active' : ''}}" >{{item.text}}</li>
 						</ul>
 					</div>
@@ -116,10 +116,9 @@ define(['app', 'ComponentAngular', 'extend'], function(app, ComponentAngular, ex
 				me.scope.$apply();
 			});
 			
-			$('.combobox-expand', this.el).on('click', function() {
-				return false;
-			});
-		
+			this.el.querySelector('.combobox-expand').addEventListener('click', function(e) {
+				e.stopPropagation();
+			}, false);
 			
 		},
 		
@@ -148,7 +147,7 @@ define(['app', 'ComponentAngular', 'extend'], function(app, ComponentAngular, ex
 			this.scope.isExpand = false;
 		},
 		
-		clickItem: function(item) {
+		clickItem: function(e, item) {
 			console.log(item);
 			this.scope.isExpand = false;
 			this.scope.currentItem = this.currentItem = item;

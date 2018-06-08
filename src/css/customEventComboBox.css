@@ -1,0 +1,48 @@
+
+
+.property-group  input {
+	display: none;
+}
+
+.property-group  input:checked ~ ul {
+	display: block 
+}
+
+.property-group  input ~ ul  {
+	display: none;
+}
+
+.property-group {
+	display: inline-block;
+	width: 150px;
+	padding-left: 10px;
+	position: relative;
+}
+
+.property-arrow {
+    display: inline-block;
+    height: 8px;
+    width: 0px;
+   
+    border-left: 5px solid transparent;
+    
+    border-right: 5px solid transparent;
+    margin-left: 6px;
+    position: absolute;
+}
+.property-group  input:not(:checked) + .property-arrow {
+	border-bottom: 6px solid #B2CF07;
+	top: 0px;
+}
+
+.property-group  input:checked  + .property-arrow {
+	top: 9px;
+	border-top: 6px solid #B2CF07;
+}
+
+.unavailable {
+	background-color: #666 !important;
+	cursor: not-allowed !important;
+}
+
+

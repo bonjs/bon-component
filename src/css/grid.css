@@ -1,4 +1,4 @@
-.component-table {
+.component-grid {
 	/*
 	width:500px; 
 	height:200px;
@@ -6,13 +6,13 @@
 	//border-bottom: 1px #ccc solid;
 	//border-right: 1px #ccc solid;
 }
-.component-table table {
+.component-grid table {
 	border-collapse:collapse;
 	border:0;
 	border:none;
 }
 
-.component-table table td  {
+.component-grid table td  {
 	//border:1px solid #ccc;
 	padding: 3px 0 ;
 	vertical-align: middle;
@@ -20,7 +20,7 @@
 }
 
 
-.component-table table .table-cell  {
+.component-grid table .table-cell  {
 	overflow:hidden;
 	padding:0 2px;
 	
@@ -29,7 +29,7 @@
 	text-align: center;
 }
 
-.component-table .table-body {
+.component-grid .table-body {
 	
 	display: inline-flex;
     width: inherit;
@@ -38,7 +38,7 @@
 }
 
 
-.component-table .sortable-icon {
+.component-grid .sortable-icon {
     display: inline-block;
     
     margin-left: 3px;
@@ -51,7 +51,7 @@
     border-right: 5px solid transparent;
 }
 
-.component-table .sortable-icon:before {
+.component-grid .sortable-icon:before {
     top: -10px;
     left: -5px;
     position: absolute;
@@ -62,14 +62,14 @@
     border-right: 5px solid transparent;
 }
 
-.component-table .asc {
+.component-grid .asc {
 	top: 0px;
     border-left: 5px solid transparent;
     border-top: 4px solid #B2CF07;
     border-right: 5px solid transparent;
 }
 
-.component-table .asc:before {
+.component-grid .asc:before {
 	top: -10px;
     left: -5px;
     position: absolute;
@@ -80,14 +80,14 @@
     border-right: 5px solid transparent;
 }
 
-.component-table .desc {
+.component-grid .desc {
 	top: 0px;
     border-left: 5px solid transparent;
     border-top: 4px solid #90909066;
     border-right: 5px solid transparent;
 }
 
-.component-table .desc:before {
+.component-grid .desc:before {
 	top: -10px;
     left: -5px;
     position: absolute;
@@ -99,62 +99,62 @@
 }
 
 
-.component-table .unlocked-columns {
+.component-grid .unlocked-columns {
 	overflow:hidden;
 }
 
-.component-table .unlocked-columns, .component-table .locked-columns  {
+.component-grid .unlocked-columns, .component-grid .locked-columns  {
 	
 	//height: inherit;
 	//overflow:hidden;
 	position:relative;
 }
 
-.component-table .columns-content {
+.component-grid .columns-content {
 	height: calc(100% - 30px);	/* 默认值，实际会被js修改 */
 	display: block;
 }
 
-.component-table .unlocked-columns .columns-title {
+.component-grid .unlocked-columns .columns-title {
 	display: block;
 	overflow:hidden
 }
-.component-table .unlocked-columns .columns-content {
+.component-grid .unlocked-columns .columns-content {
 	//overflow:overlay;
 	overflow:hidden;
 }
 
-.component-table .locked-columns .columns-content {
+.component-grid .locked-columns .columns-content {
 	overflow:hidden; 
 }
-.component-table .locked-columns .columns-title, .component-table  .unlocked-columns .columns-title {
+.component-grid .locked-columns .columns-title, .component-grid  .unlocked-columns .columns-title {
 	background-color: white;
 	color:#bbb;
 }
-.component-table *[col-type="checkbox"] {
+.component-grid *[col-type="checkbox"] {
 	//width: auto;
     //min-width: 10px;
 }
 
-.component-table .table-footer {
+.component-grid .table-footer {
 	height: 60px;
 	line-height: 60px;
 	margin: 0 auto;
 	text-align:center;
 }
-.component-table .table-footer ul {
+.component-grid .table-footer ul {
 	padding: 0px;
 	margin: 0px;
 	list-style: none;
 }
 
-.component-table .table-footer  li {
+.component-grid .table-footer  li {
 	display: inline-block;
 	list-style: none;
 	width: 40px;
 }
 
-.component-table .table-footer  .page-button {
+.component-grid .table-footer  .page-button {
 	cursor: pointer;
 	width: 9px;
 	height: 9px;
@@ -164,32 +164,32 @@
 	transform: translate(0,-50%) rotate(-135deg);
 }
 
-.component-table .table-footer  li.prev {
+.component-grid .table-footer  li.prev {
 	border-right: 1px solid #ccc;
 	border-top: 1px solid #ccc;
 	
 }
 
-.component-table .table-footer  li.next {
+.component-grid .table-footer  li.next {
 	border-left: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
 }
 
-.component-table .table-footer  .page-no {
+.component-grid .table-footer  .page-no {
 	cursor: pointer;
 }
 
-.component-table .table-footer  .page-no {
+.component-grid .table-footer  .page-no {
 	cursor: pointer;
 }
 
-.component-table .row-no .table-cell {
+.component-grid .row-no .table-cell {
 	min-width: 30px;
     width: 30px;
 	color: #bbb;
 }
 
-.component-table li.current-page {
+.component-grid li.current-page {
 	background-color: #789;
 	
 	background-color: #B2CF07;
@@ -206,7 +206,7 @@
 	
 }
 
-.component-table  .scroll-bar-y {
+.component-grid  .scroll-bar-y {
 	display: block;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -219,14 +219,14 @@
 	border-radius: 5px;
 	background-color: #33333333;
 }
-.component-table .scroll-bar-y  div{
+.component-grid .scroll-bar-y  div{
    position: relative;
    width:100%;
    border-radius: 5px;
    background-color: #80808080;
 }
 
-.component-table .scroll-bar-x {
+.component-grid .scroll-bar-x {
     width: 100%;
 	height: 10px;
     overflow-x: hidden;
@@ -236,14 +236,14 @@
 	border-radius: 5px;
 	background-color: #33333333;
 }
-.component-table .scroll-bar-x  div{
+.component-grid .scroll-bar-x  div{
    position: relative;
    height:100%;
    border-radius: 5px;
    background-color: #80808080;
 }
 
-.component-table input[type="checkbox"] {
+.component-grid input[type="checkbox"] {
 	display: inherit;
 	width: inherit;
     height: inherit;
