@@ -45,10 +45,11 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 			<div class="component-grid">
 				<div class="table-body">
 					<div class="locked-columns">
-						<table class="columns-title" border="0" cellspacing="0" cellpadding="0"  style="border: 1px red solid">
-						  <tr ng-repeat="row in lockedColumnsMultiHead">
+						<table class="columns-title" border="0" cellspacing="0" cellpadding="0">
+						  <!-- 锁定列的表头 -->
+						  <tr ng-repeat="row in lockedMultiTitles">
 							<td ng-if="isShowRowNo" class="row-no"><div class="table-cell"></div></td>
-							<td ng-repeat="col in row" col-type="{{col.type}}" >
+							<td ng-repeat="col in row" colspan="{{col.allLeafLength}}" rowspan="{{col.rowspan}}">
 								<div class="table-cell">
 									{{col.header}}
 									<span class="sortable-icon" ng-if="col.sortable === true" ng-class="col.sort" ng-click="sortClick(col)"></span>
@@ -58,9 +59,9 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 						  </tr>
 						</table>
 						<table class="columns-content" border="0" cellspacing="0" cellpadding="0">
-						  <tr ng-repeat="(rowIndex, row) in unlockedColumnsTitlesMultiHead" table-rows-repeat-finished>
+						  <tr ng-repeat="(rowIndex, row) in data" table-rows-repeat-finished>
 							<td ng-if="isShowRowNo" class="row-no"><div class="table-cell">{{rowIndex + 1}}</td>
-							<td ng-repeat="(colIndex, col) in lockedColumnsTitles " col-type="{{col.type}}" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
+							<td ng-repeat="(colIndex, col) in lockedMultiTitlesLeaf " col-type="{{col.type}}" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
 								<!--
 								{{col.type == 'data' ? row[col.dataIndex] : ""}}
 								<input ng-if="col.type != 'data'" type="{{col.type}}" ng-checked="row.isChecked" ng-click="checkItem($event, row, rowIndex, col)"/>
@@ -70,9 +71,10 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 						</table>
 					</div>
 
-					<div class="unlocked-columns" >
+					<div class="unlocked-columns">
 						<table class="columns-title" border="0" cellspacing="0" cellpadding="0">
-						  <tr ng-repeat="row in columnsMultiHead">
+						  <!-- 非锁定列的表头 -->
+						  <tr ng-repeat="row in unlockedMultiTitles">
 							<td ng-repeat="col in row" colspan="{{col.allLeafLength}}" rowspan="{{col.rowspan}}">
 								<div class="table-cell">
 									{{col.header}}
@@ -83,7 +85,7 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 						</table>
 						<table class="columns-content" border="0" cellspacing="0" cellpadding="0">
 						  <tr ng-repeat="(rowIndex, row) in data">
-							<td ng-repeat="(colIndex, col) in columnsMultiHeadList" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
+							<td ng-repeat="(colIndex, col) in unlockedMultiTitlesLeaf" compile-bind-expn="renderTpl(row[col.dataIndex], row, col, rowIndex, colIndex)">
 								<!--
 								{{row[col.dataIndex]}}
 								-->
@@ -128,19 +130,25 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 			
 			this.initEvent();
 			
-			this.initTitle();
-			
-			this.initTable();
+			this.render();
 			
 			window.s = this.scope;
+		},
+		
+		render: function() {
+			this.initTitle();
+			this.initTable();
 		},
 		
 		
 		initTitle: function() {
 			
 			var me = this;
-			var columnsMultiHead = [];		// 多级表头
-			var columnsMultiHeadList = [];	// 多级表头实际的列(真正显示数据的列,为多级表头的叶子节点)
+			var lockedMultiTitles = [];		// 多级表头(包括多级表头关系)
+			var lockedMultiTitlesLeaf = [];	// 多级表头实际的列(真正显示数据的列,为多级表头的叶子节点)
+			
+			var unlockedMultiTitles = [];		// 多级表头(包括多级表头关系)
+			var unlockedMultiTitlesLeaf = [];	// 多级表头实际的列(真正显示数据的列,为多级表头的叶子节点)
 			
 			
 			// 获取多级表头层级数
@@ -162,16 +170,31 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 			}();
 			
 			
+		
+			this.columns.forEach(function(col) {
+				
+				initCol(col, 1);
+			});
+			
 			// 设置节点的depth, parent操作
 			function initCol(col, level) {
 			
 				col.allLeafLength = Column.prototype.getAllLeafLength.call(col);
 				col.depth = level;
 				
-				if(!columnsMultiHead[level - 1]) {
-					columnsMultiHead[level - 1] = [];
+				if(col.locked == true) {
+					if(!lockedMultiTitles[level - 1]) {
+						lockedMultiTitles[level - 1] = [];
+					}
+				
+					lockedMultiTitles[level - 1].push(col);
+				} else if(col.locked != true) {
+					if(!unlockedMultiTitles[level - 1]) {
+						unlockedMultiTitles[level - 1] = [];
+					}
+				
+					unlockedMultiTitles[level - 1].push(col);
 				}
-				columnsMultiHead[level - 1].push(col);
 			
 				level ++;
 				
@@ -182,7 +205,7 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 					});
 					
 				} else {
-					columnsMultiHeadList.push({
+					(col.locked == true ? lockedMultiTitlesLeaf : unlockedMultiTitlesLeaf).push({
 						grid : me,
 						type : col.type || 'data',
 						header : col.header,
@@ -201,17 +224,16 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 					Column.prototype.setParentRowspan.call(col);
 				}
 			}
-		
-			this.columns.forEach(function(col) {
-				
-				initCol(col, 1);
-			});
 			
 			//console.log(arr);
 			//this.columns 原始列配置
 			
-			this.columnsMultiHead = this.scope.columnsMultiHead = columnsMultiHead;
-			this.columnsMultiHeadList = this.scope.columnsMultiHeadList = columnsMultiHeadList;
+			this.lockedMultiTitles = this.scope.lockedMultiTitles = lockedMultiTitles;
+			this.lockedMultiTitlesLeaf = this.scope.lockedMultiTitlesLeaf = lockedMultiTitlesLeaf;
+			
+			this.unlockedMultiTitles = this.scope.unlockedMultiTitles = unlockedMultiTitles;
+			this.unlockedMultiTitlesLeaf = this.scope.unlockedMultiTitlesLeaf = unlockedMultiTitlesLeaf;
+			
 			
 		},
 		
@@ -238,30 +260,9 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 			}, []);
 			*/
 			
-			debugger;
-			// 锁定列的表头
-			this.scope.lockedColumnsMultiHead = this.columnsMultiHead.filter(function (it) {
-				return it.locked === true;
-			});
-			
-			console.log(this.scope.lockedColumnsMultiHead)
-			
-			// 锁定列的表头
-			this.scope.lockedColumnsMultiHeadList = this.columnsMultiHeadList.filter(function (it) {
-				return it.locked === true;
-			});
 			
 			
-			// 非锁定列的表头
-			this.scope.unlockedColumnsTitlesMultiHead = this.columnsMultiHead.filter(function (it) {
-				return it.locked !== true;
-			});
-			// 非锁定列的表头
-			this.scope.unlockedColumnsTitlesMultiHeadList = this.columnsMultiHeadList.filter(function (it) {
-				return it.locked !== true;
-			});
-			
-			
+			this.scope.$apply();
 			
 			
 			
@@ -280,7 +281,6 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 				return arr;
 			}();
 			
-			this.scope.$apply();
 			
 			this.initSize();
 		},
@@ -315,6 +315,7 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 					col.type == "data" ? row[col.dataIndex] : "",
 					'<input ng-if="col.type != \'data\'" type="{{col.type}}" ng-checked="row.isChecked" ng-click="checkItem($event, row, rowIndex, col)"/>',
 				].join('');
+				
 				
 				return '<div class="table-cell">' + (col.onRender ? col.onRender.apply(me, arguments) : defaultColHtml) + '</div>';
 			}
@@ -721,7 +722,6 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 
 	});
 
-	debugger
 	return Grid;
 	
 });
