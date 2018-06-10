@@ -153,7 +153,7 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 			
 			// 获取多级表头层级数
 			var maxDepth = function() {
-				var maxDepth = 1;
+				var maxDepth = 0;
 				function getDepth(col, depath) {
 					if(col.columns) {
 						maxDepth ++;
@@ -217,10 +217,10 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 
 					});
 					/**
-						叶子节点的rowspan = maxDepth - depth + 1;
+						叶子节点的rowspan = maxDepth - depth;
 						叶子节点的所有父节点rowspan都为1
 					*/
-					col.rowspan = maxDepth - col.depth + 1;
+					col.rowspan = maxDepth - col.depth;
 					Column.prototype.setParentRowspan.call(col);
 				}
 			}
