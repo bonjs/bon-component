@@ -57,29 +57,52 @@
 							console.log('titleclick', a)
 						},
 						checkitem : function (row, i, isChecked) {
-							debugger;
 							console.log(row, i)
 						}
 					},
 					columns : [{
-							header : '编号',
-							dataIndex : 'id',
-							locked : true,
-						}, {
 							header : '人员信息',
-							columns: [
-								{
+							locked : true,
+							columns: [{
+									header : '编号',
+									dataIndex : 'id',
+									locked : true,
+								}, {
 									header : '姓名',
 									dataIndex : 'name',
-								}, {
-									header : '性别',
-									dataIndex : 'sex'
+									
+									locked : true,
 								}
 							]
 						
 						}, {
-							header : '语文',
-							dataIndex : 'chinese'
+							header : '主科成绩',
+							columns: [
+								{
+									header : '语文',
+									dataIndex : 'chinese'
+								}, {
+									header : '英语',
+									dataIndex : 'english'
+								}, {
+									header : '数学',
+									dataIndex : 'math'
+								}
+							]
+						}, {
+							header : '理科成绩',
+							columns: [
+								{
+									header : '物理',
+									dataIndex : 'physics'
+								}, {
+									header : '生物',
+									dataIndex : 'biology'
+								}, {
+									header : '化学',
+									dataIndex : 'chemistry'
+								}
+							]
 						}
 					],
 				});
@@ -120,7 +143,7 @@
 						}
 					];
 					
-					grid.initTable();
+					grid.render();
 					//grid.load('data.json');
 				});
 				
@@ -136,12 +159,5 @@
 		
 		<button id=col2>改变列, 改变data</button>
 		
-		<div id=aa class=aa style="height: 300px; width: 300px; border: 1px red solid;">
-			<div id=bb class=bb style="height: 200px; width: 200px;border: 1px red solid;">
-				<div id=cc class=cc style="height: 100px; width: 100px;border: 1px red solid;">
-					
-				</div>
-			</div>
-		</div>
 	</body> 
 </html>
