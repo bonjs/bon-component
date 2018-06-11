@@ -27,6 +27,7 @@
 	width: 100px;
 	min-height:22px;
 	text-align: center;
+	margin: 0 auto;
 }
 
 .component-grid .table-body {
