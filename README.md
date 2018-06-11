@@ -1,1 +1,1 @@
-# e
+# bon-component
