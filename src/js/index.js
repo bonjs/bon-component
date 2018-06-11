@@ -82,6 +82,38 @@ setTimeout(function() {
 		],
 	});
 	
-	table.load('data.json')
+	table.load('data.json');
+	
+	$('#col2').click(function() {
+		table.columns = [{
+				type : 'checkbox',
+				dataIndex : 'id',
+				locked : true,
+			}, {
+				header : '编号',
+				dataIndex : 'id',
+				sortable : true,
+				locked : true,
+			
+			}, {
+				header : '语文',
+				sortable : true,
+				dataIndex : 'chinese'
+			
+			}, {
+				header : '生物',
+				sortable : true,
+				dataIndex : 'biology'
+			}, {
+				header : '化学',
+				sortable : true,
+				dataIndex : 'chemistry'
+			}
+		];
+		
+		table.initTable();
+		table.load('data.json');
+	});
+	
 
 });
