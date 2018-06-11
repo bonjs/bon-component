@@ -3,7 +3,7 @@ var pt = {};
 
 
 require.config({
-	baseUrl : "src/js/"
+	baseUrl : "../src/js/"
 });
 
 

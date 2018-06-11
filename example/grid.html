@@ -1,0 +1,147 @@
+<html ng-app="app" >
+	<head>
+		
+		<link type="text/css" rel="stylesheet" href=../src/css/grid.css />
+		
+		<style>
+			table tr td {
+				border: 1px #ccc solid;
+			}
+		</style>
+		
+		<script src="https://cdn.bootcss.com/angular.js/1.4.6/angular.min.js"></script>
+		
+		<script src="https://cdn.bootcss.com/jquery/1.12.1/jquery.js"></script>
+		<script src="https://cdn.bootcss.com/require.js/2.3.5/require.js"></script>
+		<!--
+		<script src="../src/js/angular.js"></script>
+		-->
+		<script src="../context.js"></script>
+		
+		
+		
+		<script>	
+
+			require(['Grid'], function(Grid) {
+				
+				
+				var grid = new Grid({
+					
+					renderTo: 'main',
+					
+					width: 500,
+					height: 300,
+					
+					pageSizeKey: 'size',
+					pageNoKey: 'no',
+					
+					data : function () {
+						var arr = [];
+
+						for (var i = 0; i < 20; i++) {
+							arr.push({
+								id : i + 1,
+								name : 'sun' + (i + 1),
+								chinese : parseInt(Math.random() * 60 + 40),
+								math : parseInt(Math.random() * 60 + 40),
+								english : parseInt(Math.random() * 60 + 40),
+								physics : parseInt(Math.random() * 60 + 40),
+								biology : parseInt(Math.random() * 60 + 40),
+								chemistry : parseInt(Math.random() * 60 + 40)
+							});
+						}
+						return arr;
+					}(),
+					listeners : {
+						titleclick : function (a) {
+							console.log('titleclick', a)
+						},
+						checkitem : function (row, i, isChecked) {
+							debugger;
+							console.log(row, i)
+						}
+					},
+					columns : [{
+							header : '编号',
+							dataIndex : 'id',
+							locked : true,
+						}, {
+							header : '人员信息',
+							columns: [
+								{
+									header : '姓名',
+									dataIndex : 'name',
+								}, {
+									header : '性别',
+									dataIndex : 'sex'
+								}
+							]
+						
+						}, {
+							header : '语文',
+							dataIndex : 'chinese'
+						}
+					],
+				});
+				
+				
+				$('#col2').click(function() {
+					grid.columns = [{
+							type : 'checkbox',
+							dataIndex : 'id',
+							locked : true,
+						}, {
+							header : '编号',
+							dataIndex : 'id',
+							sortable : true,
+							locked : true,
+						
+						}, {
+							header : '语文',
+							sortable : true,
+							dataIndex : 'chinese'
+						
+						}, {
+							header : '生物',
+							sortable : true,
+							dataIndex : 'biology'
+						}, {
+							header : '化学',
+							sortable : true,
+							dataIndex : 'chemistry'
+						}, {
+							header : '生物',
+							sortable : true,
+							dataIndex : 'biology'
+						}, {
+							header : '化学',
+							sortable : true,
+							dataIndex : 'chemistry'
+						}
+					];
+					
+					grid.initTable();
+					//grid.load('data.json');
+				});
+				
+
+			});
+
+		</script>
+	
+		
+	</head>
+	<body ng-controller="main">
+		<div id=main></div>
+		
+		<button id=col2>改变列, 改变data</button>
+		
+		<div id=aa class=aa style="height: 300px; width: 300px; border: 1px red solid;">
+			<div id=bb class=bb style="height: 200px; width: 200px;border: 1px red solid;">
+				<div id=cc class=cc style="height: 100px; width: 100px;border: 1px red solid;">
+					
+				</div>
+			</div>
+		</div>
+	</body> 
+</html>

@@ -36,13 +36,13 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 
 
 
-	var Table = extend(ComponentAngular, {
+	var Grid = extend(ComponentAngular, {
 		
 		data: [],
 		
 		template: `
 		
-			<div class="component-table">
+			<div class="component-grid">
 				<div class="table-body">
 					<div class="locked-columns">
 						<table class="columns-title" border="0" cellspacing="0" cellpadding="0"  style="border: 1px red solid">
@@ -722,6 +722,6 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 	});
 
 	debugger
-	return Table;
+	return Grid;
 	
 });
