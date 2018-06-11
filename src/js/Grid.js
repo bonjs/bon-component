@@ -462,6 +462,20 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 			this.fireEvent('checkall', dom.checked);
 		},
 		sortClick : function (col) {
+			
+			this.lockedMultiTitles[this.lockedMultiTitles.length - 1].forEach(function(it, i) {
+				if(col != it) {
+					it.sort = undefined;
+				}
+			});
+			
+			this.unlockedMultiTitles[this.unlockedMultiTitles.length - 1].forEach(function(it, i) {
+				if(col != it) {
+					it.sort = undefined;
+				}
+			});
+			
+			
 			col.sort = (col.sort == 'desc' || col.sort == undefined) ? 'asc' : 'desc';
 			var dataIndex = col.dataIndex;
 			this.scope.data.sort(function (a, b) {
