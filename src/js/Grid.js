@@ -631,7 +631,6 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 			var me = this;
 			
 			
-			var isDrag = false;
 			var x, y;// 拖动位置
 			
 			var el = this.el;
@@ -640,17 +639,19 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 			
 			this.fixSize();
 			
-			bar.on('mousedown', function(e) {
-				isDrag = true;
-				x = e.clientX - bar[0].offsetLeft;
-				y = e.clientY - bar[0].offsetTop;
-			});
-			
-			$(document).on('mousemove', function(e) {
-				if(isDrag) {
+			var isMobile = /Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent);
+			console.log(isMobile);
+			if(isMobile) {
+				bar.on('touchstart', function(e) {
+					x = e.originalEvent.changedTouches[0].clientX - bar[0].offsetLeft;
+					y = e.originalEvent.changedTouches[0].clientY - bar[0].offsetTop;
+				});
+				
+				
+				$(document).on('touchmove', function(e) {
 					
-					var barLeft = e.clientX - x;
-					var barTop = e.clientY - y;
+					var barLeft = e.originalEvent.changedTouches[0].clientX - x;
+					var barTop = e.originalEvent.changedTouches[0].clientY - y;
 					
 					//var contentLeft = barLeft / rateWidth;
 					//var contentTop = barTop / rateHeight;
@@ -659,19 +660,50 @@ define(['app', 'Component', 'ComponentAngular', 'extend'], function(app, Compone
 					
 					me.dragBar(barLeft, barTop)
 					
-					return false;
-				}
-			});
+				});
+				
+				
+			} else {
 			
-			$(document).on('mouseup', function(e) {
-				isDrag = false;
-			});
+				
+				var isDrag = false;
+				bar.on('mousedown', function(e) {
+					isDrag = true;
+					x = e.clientX - bar[0].offsetLeft;
+					y = e.clientY - bar[0].offsetTop;
+				});
+				
+				
+				
+				$(document).on('mousemove', function(e) {
+					if(isDrag) {
+						
+						var barLeft = e.clientX - x;
+						var barTop = e.clientY - y;
+						
+						//var contentLeft = barLeft / rateWidth;
+						//var contentTop = barTop / rateHeight;
+						
+						//me.fireEvent('drag', barLeft, barTop);
+						
+						me.dragBar(barLeft, barTop)
+						
+						return false;
+					}
+				});
+				
+				$(document).on('mouseup', function(e) {
+					isDrag = false;
+				});
+				
+				$(document).on('mouseout', function(e) {
+					if(!me.isParent(e.target, this.body) && e.target != this.body) {
+						isDrag = false;	
+					}
+				});
 			
-			$(document).on('mouseout', function(e) {
-				if(!me.isParent(e.target, this.body) && e.target != this.body) {
-					isDrag = false;	
-				}
-			});
+				
+			}
 		},
 		
 		fixSize: function() {
